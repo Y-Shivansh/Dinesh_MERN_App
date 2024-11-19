@@ -21,6 +21,7 @@ const foodListingSchema = new mongoose.Schema(
         expirationDate: { 
             type: Date, 
             required: true },
+            
         location: {
             address: { 
                 type: String, 
