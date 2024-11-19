@@ -1,0 +1,9 @@
+
+.DS_Store
+Thumbs.db
+
+Client/node_modules/
+
+Server/node_modules/
+Server/logs/
+Server/.env

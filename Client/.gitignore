@@ -1,0 +1,13 @@
+# Node.js dependencies
+/node_modules/
+
+# React build files
+/build/
+
+# IDE and editor settings specific to frontend
+.vscode/
+.idea/
+
+# OS files (for frontend)
+.DS_Store
+Thumbs.db
