@@ -65,7 +65,7 @@ router.put("/profile/:id", checkAuth, async (req, res) => {
         const updatedUser = await User.findByIdAndUpdate(req.params.id, req.body, {
             new: true,
         });
-        
+
         if (!updatedUser) return res.status(404).json({ message: "User not found" });
 
         res.json(updatedUser);
@@ -80,11 +80,11 @@ router.delete("/profile/:id", checkAuth, async (req, res) => {
         if (req.user.id !== req.params.id && req.user.role !== "admin") {
             return res.status(403).json({ message: "Not authorized" });
         }
-        
+
         const deletedUser = await User.findByIdAndDelete(req.params.id);
-        
+
         if (!deletedUser) return res.status(404).json({ message: "User not found" });
-        
+
         res.json({ message: "User deleted successfully" });
     } catch (error) {
         console.error(error);
