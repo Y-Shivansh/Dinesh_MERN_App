@@ -6,10 +6,10 @@ import { updateFoodListing } from "../controllers/foodListingController.js";
 import { deleteFoodListing } from "../controllers/foodListingController.js";
 const router = express.Router();
 
-router.post("/listings", createFoodListing);
-router.get("/listings", getAllFoodListings);
-router.get("/listings/:id", getFoodListingById);
-router.put("/listings/:id", updateFoodListing);
-router.delete("/listings/:id", deleteFoodListing);
+router.post("/FoodListings", createFoodListing);
+router.get("/FoodListings", getAllFoodListings);
+router.get("/FoodListings/:id", getFoodListingById);
+router.put("/FoodListings/:id", updateFoodListing);
+router.delete("/FoodListings/:id", deleteFoodListing);
 
 export default router;

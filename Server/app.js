@@ -3,6 +3,8 @@ import helmet from "helmet"
 import cors from "cors";
 import userRoutes from "./routes/userRoutes.js"
 import  foodListingRoutes from "./routes/foodListingRoutes.js"
+
+// import auth from './routes/userRoutes';
 const app = express();
 
 app.use(helmet());
