@@ -102,4 +102,45 @@ router.get("/users", isAdmin, async (req, res) => {
     }
 });
 
+
+router.post("/profile/:id/reviews", checkAuth, async (req, res) => {
+    try {
+        const { comment, rating } = req.body;
+        const user = await User.findById(req.params.id);
+
+        if (!user) return res.status(404).json({ message: "User not found" });
+
+        const review = {
+            reviewer: req.user.id,
+            comment,
+            rating,
+        };
+
+        user.reviews.push(review);
+
+        user.rating = (
+            user.reviews.reduce((sum, r) => sum + r.rating, 0) / user.reviews.length
+        ).toFixed(1);
+
+        await user.save();
+        res.status(201).json({ message: "Review added successfully" });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Server error" });
+    }
+});
+
+router.get("/profile/:id/reviews", async (req, res) => {
+    try {
+        const user = await User.findById(req.params.id).populate("reviews.reviewer", "name");
+        if (!user) return res.status(404).json({ message: "User not found" });
+
+        res.json(user.reviews);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Server error" });
+    }
+});
+
+
 export default router;
