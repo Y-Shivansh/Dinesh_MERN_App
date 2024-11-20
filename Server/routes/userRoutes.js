@@ -1,12 +1,14 @@
 import express from 'express';
-import { body, check, validationResult } from 'express-validator'; // Added this import
+import { body, check } from 'express-validator'; // Added this import
 import User from "../models/user.js";
-import { checkAuth, isAdmin } from "../middlewares/authMiddleware.js";
+import { checkAuth } from "../middlewares/authMiddleware.js";
 import { authMiddleware } from '../middlewares/authenticate.js';
 import { registerUser } from '../controllers/registerController.js'
 import { loginUser } from '../controllers/loginController.js'
 import { verifyOtpController } from '../controllers/verifyOtpController.js';
 import { updatePassword } from '../controllers/updatePassController.js';
+import { resetVerification } from '../controllers/resetVerification.js';
+import { resetPassword } from '../controllers/resetPassword.js';
 
 const router = express.Router();
 
@@ -40,10 +42,13 @@ router.post('/logout', (req, res) => {
     res.status(200).json({ message: 'Logged out successfully' });
 });
 
-// router.put("/reset-password",[
-//     body('email').isEmail().withMessage('Please include a valid email')
-// ], resetPassword)
-// router.put("/verify-otp", verifyOtpAndReset);
+router.post("/reset-verification",[
+    body('email').isEmail().withMessage('Please include a valid email')
+], resetVerification)
+router.put("/reset-password",[
+    body('enteredOtp').notEmpty().withMessage('OTP is required'),
+    check('newPassword', 'New password must be at least 6 characters long').isLength({ min: 6 })
+],resetPassword);
 
 router.put("/update-password",[
     check('oldPassword', 'Old password is required').notEmpty(),

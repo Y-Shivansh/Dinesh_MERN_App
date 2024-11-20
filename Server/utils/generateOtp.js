@@ -5,18 +5,17 @@ import Otp from '../models/Otp.js'
 
 dotenv.config();
 
-export const sendOtp = async (name,email,password,role) => {
+export const sendOtp = async (email,additionalData={}) => {
     try {
         const otp = crypto.randomInt(100000, 999999).toString();
         const expiryTime = new Date(Date.now() + 10 * 60 + 1000)
-        const newOtp = new Otp({
-            name,
+        const newOtpData = {
             email,
-            password,
-            role,
             otp,
-            expiry: expiryTime
-        })
+            expiry: expiryTime,
+            ...additionalData
+        }
+        const newOtp = new Otp(newOtpData);
         await newOtp.save()
 
         const transporter = nodemailer.createTransport({

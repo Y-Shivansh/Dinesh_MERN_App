@@ -18,6 +18,7 @@ export const verifyOtpController = async (req, res) => {
         const otp = otpRecord.otp;
         const currentTIme = new Date();
         if (currentTIme < otpRecord.expiry) {
+            await Otp.deleteOne({ email });
             return res.status(400).json({ message: 'Expired Otp' });
         }
         if (enteredOtp !== otpRecord.otp) {
@@ -39,6 +40,7 @@ export const verifyOtpController = async (req, res) => {
                 maxAge: 43200000
             })
             await newUser.save()
+            await Otp.deleteOne({ email });
             return res.status(201).json({ message: 'User registered successfully', token });
         }
         await Otp.deleteOne({ email });
