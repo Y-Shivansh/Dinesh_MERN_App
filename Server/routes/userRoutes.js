@@ -3,9 +3,10 @@ import { body, check, validationResult } from 'express-validator'; // Added this
 import User from "../models/user.js";
 import { checkAuth, isAdmin } from "../middlewares/authMiddleware.js";
 import { authMiddleware } from '../middlewares/authenticate.js';
-import { registerUser } from '../controllers/registerController.js';
-import { loginUser } from '../controllers/loginController.js';
-// import  {resetPassword,verifyOtpAndReset}  from '../controllers/resetPassController.js';
+import { registerUser } from '../controllers/registerController.js'
+import { loginUser } from '../controllers/loginController.js'
+import { verifyOtpController } from '../controllers/verifyOtpController.js';
+import { updatePassword } from '../controllers/updatePassController.js';
 
 const router = express.Router();
 
@@ -17,6 +18,11 @@ router.post("/register", [
     .withMessage('Password must be at least 6 characters long'),
     body('role').optional().isIn(['individual', 'business', 'charity']).withMessage('Invalid role'),
 ], registerUser);
+
+// Email in query (navigation)    /verify-otp?email=user@example.com
+router.post("/verify-otp", [
+    body('enteredOtp').notEmpty().withMessage('OTP is required')
+], verifyOtpController);
 
 router.post("/login", [
     body('email').isEmail().withMessage('Please include a valid email'),
@@ -36,16 +42,16 @@ router.post('/logout', (req, res) => {
 
 // router.put("/reset-password",[
 //     body('email').isEmail().withMessage('Please include a valid email')
-// ], resetPassword);
-
+// ], resetPassword)
 // router.put("/verify-otp", verifyOtpAndReset);
 
-router.put("update-password",[
+router.put("/update-password",[
     check('oldPassword', 'Old password is required').notEmpty(),
     check('newPassword', 'New password must be at least 6 characters long').isLength({ min: 6 })
-], authMiddleware);
+], authMiddleware, updatePassword );
 
-router.get("/profile/:id", checkAuth, async (req, res) => {
+
+router.get("/profile/:id", authMiddleware, async (req, res) => {
     try {
         const user = await User.findById(req.params.id);
         if (!user) return res.status(404).json({ message: "User not found" });
@@ -56,7 +62,7 @@ router.get("/profile/:id", checkAuth, async (req, res) => {
     }
 });
 
-router.put("/profile/:id", checkAuth, async (req, res) => {
+router.put("/profile/:id", authMiddleware, async (req, res) => {
     try {
         if (req.user.id !== req.params.id && req.user.role !== "admin") {
             return res.status(403).json({ message: "Not authorized" });

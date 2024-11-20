@@ -6,5 +6,5 @@ export const generateToken = (userId) => {
         SECRET_KEY,
         {expiresIn: "12h"}
     )
-    return token
+    return token;
 }

@@ -1,7 +1,7 @@
 import bcrypt from 'bcrypt'
 import { generateToken } from '../utils/generateToken.js'
 import User from '../models/user.js'
-import validationResult from 'email-validator'
+import { validationResult } from 'express-validator';
 export const loginUser = async(req,res)=> {
     try{
         const errors = validationResult(req);

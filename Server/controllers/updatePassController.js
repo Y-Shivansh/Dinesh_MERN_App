@@ -1,5 +1,5 @@
 import bcrypt from 'bcrypt';
-import User from '../models/user'; // Import user model
+import User from '../models/user.js'; // Import user model
 import { validationResult } from 'express-validator';
 
 export const updatePassword = async (req, res) => {
@@ -9,7 +9,7 @@ export const updatePassword = async (req, res) => {
             return res.status(400).json({ errors: errors.array() });
         }
         const { newPassword, oldPassword } = req.body;
-        const user = await User.findOne({ email: req.user.email });
+        const user = await User.findOne({ id: req.user.id });
 
         if (!user) {
             return res.status(404).json({ message: "User not found" });
