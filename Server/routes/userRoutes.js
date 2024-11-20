@@ -1,8 +1,7 @@
 import express from 'express';
-import { body, check } from 'express-validator'; // Added this import
+import { body, check, validationResult } from 'express-validator';
 import User from "../models/user.js";
-import { checkAuth } from "../middlewares/authMiddleware.js";
-import { authMiddleware } from '../middlewares/authenticate.js';
+import { authenticate, isAdmin, authMiddleware } from "../middlewares/authenticate.js";
 import { registerUser } from '../controllers/registerController.js'
 import { loginUser } from '../controllers/loginController.js'
 import { verifyOtpController } from '../controllers/verifyOtpController.js';
@@ -92,14 +91,9 @@ router.put("/profile/:id", authMiddleware, async (req, res) => {
     }
 });
 
-//         res.json(updatedUser);
-//     } catch (error) {
-//         console.error(error);
-//         res.status(500).json({ message: "Server error" });
-//     }
-// });
+//delete
 
-router.delete("/profile/:id", checkAuth, async (req, res) => {
+router.delete("/profile/:id", authenticate, async (req, res) => {
     try {
         if (req.user.id !== req.params.id && req.user.role !== "admin") {
             return res.status(403).json({ message: "Not authorized" });
@@ -116,18 +110,20 @@ router.delete("/profile/:id", checkAuth, async (req, res) => {
     }
 });
 
-// router.get("/users", isAdmin, async (req, res) => {
-//     try {
-//         const users = await User.find();
-//         res.json(users);
-//     } catch (error) {
-//         console.error(error);
-//         res.status(500).json({ message: "Server error" });
-//     }
-// });
 
 
-router.post("/profile/:id/reviews", checkAuth, async (req, res) => {
+router.get("/users", authenticate,isAdmin, async (req, res) => {
+    try {
+        const users = await User.find();
+        res.json(users);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Server error" });
+    }
+});
+
+
+router.post("/profile/:id/reviews", authenticate, async (req, res) => {
     try {
         const { comment, rating } = req.body;
         const user = await User.findById(req.params.id);
@@ -157,13 +153,17 @@ router.post("/profile/:id/reviews", checkAuth, async (req, res) => {
 router.get("/profile/:id/reviews", async (req, res) => {
     try {
         const user = await User.findById(req.params.id).populate("reviews.reviewer", "name");
-        if (!user) return res.status(404).json({ message: "User not found" });
+
+        if (!user) {
+            return res.status(404).json({ message: "User not found" });
+        }
 
         res.json(user.reviews);
     } catch (error) {
-        console.error(error);
+        console.error("Error fetching reviews:", error);
         res.status(500).json({ message: "Server error" });
     }
 });
+
 
 export default router;

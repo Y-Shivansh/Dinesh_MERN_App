@@ -21,10 +21,12 @@ export const verifyOtpController = async (req, res) => {
             await Otp.deleteOne({ email });
             return res.status(400).json({ message: 'Expired Otp' });
         }
-        if (enteredOtp !== otpRecord.otp) {
+        if (enteredOtp !== otp) {
+            
             return res.status(400).json({ message: "Invalid OTP" })
         }
-        if (enteredOtp === otpRecord.otp) {
+        // if (enteredOtp === otp) {
+
             const hashedPassword = await bcrypt.hash(otpRecord.password, 10)
             const newUser = await new User({
                 name: otpRecord.name,
@@ -41,10 +43,9 @@ export const verifyOtpController = async (req, res) => {
             })
             await newUser.save()
             await Otp.deleteOne({ email });
-            return res.status(201).json({ message: 'User registered successfully', token });
-        }
-        await Otp.deleteOne({ email });
-        res.status(400).json({ message: "exceptional error" })
+            res.status(201).json({ message: 'User registered successfully', token });
+        // }
+        // res.status(400).json({ message: "exceptional error" })
     }
     catch (error) {
         console.log(error);
