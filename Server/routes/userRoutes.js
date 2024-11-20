@@ -1,11 +1,11 @@
-import express from 'express'
+import express from 'express';
+import { body, check, validationResult } from 'express-validator'; // Added this import
 import User from "../models/user.js";
 import { checkAuth, isAdmin } from "../middlewares/authMiddleware.js";
-import { authMiddleware } from '../middlewares/authenticate'
-import { check } from 'email-validator'
-import { registerUser } from '../controllers/registerController'
-import { loginUser } from '../controllers/loginController'
-import { resetPassword, verifyOtpAndReset } from '../controllers/resetPassController'
+import { authMiddleware } from '../middlewares/authenticate.js';
+import { registerUser } from '../controllers/registerController.js';
+import { loginUser } from '../controllers/loginController.js';
+// import  {resetPassword,verifyOtpAndReset}  from '../controllers/resetPassController.js';
 
 const router = express.Router();
 
@@ -16,14 +16,14 @@ router.post("/register", [
     .isLength({ min: 6 })
     .withMessage('Password must be at least 6 characters long'),
     body('role').optional().isIn(['individual', 'business', 'charity']).withMessage('Invalid role'),
-], registerUser)
+], registerUser);
 
 router.post("/login", [
     body('email').isEmail().withMessage('Please include a valid email'),
     body('password')
     .isLength({ min: 6 })
     .withMessage('Password must be at least 6 characters long')
-], loginUser)
+], loginUser);
 
 router.post('/logout', (req, res) => {
     res.clearCookie('token', {
@@ -32,18 +32,18 @@ router.post('/logout', (req, res) => {
         path: '/'
     });
     res.status(200).json({ message: 'Logged out successfully' });
-})
+});
 
-router.put("/reset-password",[
-    body('email').isEmail().withMessage('Please include a valid email')
-], resetPassword)
-router.put("/verify-otp", verifyOtpAndReset);
+// router.put("/reset-password",[
+//     body('email').isEmail().withMessage('Please include a valid email')
+// ], resetPassword);
+
+// router.put("/verify-otp", verifyOtpAndReset);
 
 router.put("update-password",[
     check('oldPassword', 'Old password is required').notEmpty(),
     check('newPassword', 'New password must be at least 6 characters long').isLength({ min: 6 })
-], authMiddleware, );
-
+], authMiddleware);
 
 router.get("/profile/:id", checkAuth, async (req, res) => {
     try {
@@ -102,7 +102,6 @@ router.get("/users", isAdmin, async (req, res) => {
     }
 });
 
-
 router.post("/profile/:id/reviews", checkAuth, async (req, res) => {
     try {
         const { comment, rating } = req.body;
@@ -141,6 +140,5 @@ router.get("/profile/:id/reviews", async (req, res) => {
         res.status(500).json({ message: "Server error" });
     }
 });
-
 
 export default router;
