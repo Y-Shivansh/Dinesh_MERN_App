@@ -1,5 +1,5 @@
 import FoodListing from "../models/FoodListing.js";
-
+import APIFeatures from '../utils/APIFeatures.js';
 export const createFoodListing = async (req, res) => {
     try {
         const {
@@ -39,14 +39,35 @@ export const createFoodListing = async (req, res) => {
         res.status(500).json({ error: "Internal Server Error. Please try again later." });
     }
 };
+
+
 export const getAllFoodListings = async (req, res) => {
     try {
-        const listings = await FoodListing.find();
-        res.status(200).json(listings);
-    } catch (error) {
-        console.log(error);
-        res.status(500).json({ error: "Error retrieving food listings. Please try again later." });
+    // console.log(req.query);
+    // for moongoose
+    const features = new APIFeatures(FoodListing.find() ,req.query)
+                    .filter()
+                    .sort()
+                    .fieldLimiting();
+
+    const newFood = await features.query;
+
+    
+    res.status(200).json({
+        status: 'success',
+        length: newFood.length,
+        data: {
+          newFood
+        }
+      });
+    } catch (err) {
+        console.log(err)
+        res.status(400).json({
+            status:'error comming',
+            message:err
+        })
     }
+
 };
 
 export const getFoodListingById = async (req, res) => {

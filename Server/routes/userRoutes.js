@@ -62,6 +62,12 @@ router.put("/profile/:id", checkAuth, async (req, res) => {
             return res.status(403).json({ message: "Not authorized" });
         }
 
+// router.put("/profile/:id", checkAuth, async (req, res) => {
+//     try {
+//         if (req.user.id !== req.params.id && req.user.role !== "admin") {
+//             return res.status(403).json({ message: "Not authorized" });
+//         }
+
         const updatedUser = await User.findByIdAndUpdate(req.params.id, req.body, {
             new: true,
         });
@@ -74,6 +80,13 @@ router.put("/profile/:id", checkAuth, async (req, res) => {
         res.status(500).json({ message: "Server error" });
     }
 });
+
+//         res.json(updatedUser);
+//     } catch (error) {
+//         console.error(error);
+//         res.status(500).json({ message: "Server error" });
+//     }
+// });
 
 router.delete("/profile/:id", checkAuth, async (req, res) => {
     try {
@@ -92,15 +105,16 @@ router.delete("/profile/:id", checkAuth, async (req, res) => {
     }
 });
 
-router.get("/users", isAdmin, async (req, res) => {
-    try {
-        const users = await User.find();
-        res.json(users);
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: "Server error" });
-    }
-});
+// router.get("/users", isAdmin, async (req, res) => {
+//     try {
+//         const users = await User.find();
+//         res.json(users);
+//     } catch (error) {
+//         console.error(error);
+//         res.status(500).json({ message: "Server error" });
+//     }
+// });
+
 
 router.post("/profile/:id/reviews", checkAuth, async (req, res) => {
     try {
