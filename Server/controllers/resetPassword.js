@@ -5,7 +5,6 @@ import  {validationResult}  from "express-validator";
 
 export const resetPassword = async (req, res) => {
     try {
-
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
             return res.status(500).json({ errors: errors.array() })
@@ -18,7 +17,7 @@ export const resetPassword = async (req, res) => {
         }
         const otp = otpRecord.otp;
         const currentTIme = new Date();
-        if (currentTIme < otpRecord.expiry) {
+        if (currentTIme > otpRecord.expiry) {
             await Otp.deleteOne({ email });
             return res.status(400).json({ message: 'Expired Otp' });
         }

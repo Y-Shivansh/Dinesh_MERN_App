@@ -3,10 +3,12 @@ import { useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
 import { InputBox } from "../components/inputBox";
 import { Button } from "../components/Button";
+import { Loading } from "../components/Loading"
 
-export const SignupVerify = () => {
+export const VerificationForm = () => {
     const [otp, setOtp] = useState("");
     const [error, setError] = useState("");
+    const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
     const location = useLocation(); // Accessing email from query params
     const email = new URLSearchParams(location.search).get("email");
@@ -29,15 +31,21 @@ export const SignupVerify = () => {
                 { withCredentials: true } //for sending cookies
             );
 
-            if (response.status===201) {
+            if (response.status === 201) {
                 navigate("/dashboard");
             } else {
                 console.log(response.data.message);
                 setError(response.data.message);
             }
         } catch (err) {
-            console.log(err);
-            setError("Error verifying OTP");
+            if (err.response) {
+                console.log("Error Occurred", err.response.data.message);
+                setError(err.response.data.message || "Error Occurred");
+            }
+            else {
+                console.log("Error Verifying: ", err.message);
+                setError("Error verifying OTP");
+            }
         }
     };
 
@@ -54,6 +62,7 @@ export const SignupVerify = () => {
                     onChange={(e) => setOtp(e.target.value)}
                 />
                 {error && <p className="text-red-500 text-sm">{error}</p>}
+                {/* {Loading} */}
                 <Button label={"Verify OTP"} onClick={handleVerifyOtp} />
             </div>
         </div>

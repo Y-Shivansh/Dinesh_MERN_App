@@ -13,6 +13,7 @@ export const Signup = () => {
     const [password, setPassword] = useState("");
     const [role, setRole] = useState("");
     const [error,setError] = useState("")
+    const [loading, setLoading] = useState(false);
     return (
         <div className="h-screen bg-[#e0f5fd] flex flex-col items-center">
             <div className="w-96 mt-20 text-center p-8 bg-gray-100 rounded-xl shadow-lg">

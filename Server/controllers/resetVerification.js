@@ -1,6 +1,6 @@
 import User from "../models/user.js";
 import { sendOtp } from "../utils/generateOtp.js";
-import  validationResult  from "express-validator";
+import  {validationResult}  from "express-validator";
 
 export const resetVerification = async (req, res) => {
     try {
@@ -14,7 +14,7 @@ export const resetVerification = async (req, res) => {
             return res.status(404).json({ message: 'User not found' });
         }
         await sendOtp(email);
-        return res.json("Otp sent!");
+        return res.status(200).json("Otp sent");
     }
     catch (error) {
         console.error(error);

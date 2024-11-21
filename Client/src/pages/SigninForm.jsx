@@ -12,14 +12,15 @@ export const Signin = () => {
     const navigate = useNavigate()
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [error, setError] = useState("");
     const [loading, setLoading] = useState(false);
 
     return (
         <div className="min-h-screen bg-[#e0f5fd] flex flex-col justify-center items-center px-4">
-            <div className="w-full max-w-md text-center p-6 bg-gray-100 rounded-xl shadow-lg">
+            <div className="w-96 max-w-md text-center p-6 bg-gray-100 rounded-xl shadow-lg">
                 <Heading label={"Sign in"} />
                 <SubHeading label={"Enter your login credentials"} />
-                
+
                 <div className="mt-4">
                     <InputBox
                         label={"Email"}
@@ -30,7 +31,7 @@ export const Signin = () => {
                     />
                 </div>
 
-                <div className="mt-4">
+                <div className="mt-2">
                     <InputBox
                         label={"Password"}
                         placeholder={"12345"}
@@ -39,8 +40,9 @@ export const Signin = () => {
                         onChange={(e) => setPassword(e.target.value)}
                     />
                 </div>
-
-                <div className="pt-6">
+                <p className="pt-3 text-red-600 text-sm ">{error}</p>
+                <BottomWarning label={"Forgot Password?"} buttonText={"Reset"} to={"/reset-password"} />
+                <div className="">
                     {loading ? (
                         <Loading />
                     ) : (
@@ -50,25 +52,31 @@ export const Signin = () => {
                                 setLoading(true);
                                 if (!email || !password) {
                                     console.log("All fields are required.");
+                                    setError("All fields required")
                                     setLoading(false);
                                     return;
                                 }
 
                                 try {
                                     const response = await axios.post(
-                                        "http://localhost:3000/api/vi/user/signin",
+                                        "http://localhost:3000/api/user/login",
                                         { email, password }
                                     );
-                                    if (response.data.message === 'Logged In successfully') {
-                                        localStorage.setItem('user', JSON.stringify(response.data.user));
-                                        localStorage.setItem('firstName', JSON.stringify(response.data.firstName));
-                                        localStorage.setItem('token', response.data.token);
+                                    if (response.status === 200) {
                                         navigate("/dashboard");
                                     } else {
-                                        console.log("Signin failed: ", response.data.message);
+                                        console.log("Login failed: ", response.data.message);
+                                        setError(response.data.message || "Login Failed")
                                     }
                                 } catch (err) {
-                                    console.log("Error Logging in: ", err.message);
+                                    if (err.response) {
+                                        console.log("Error Logging in: ", err.response.data.message);
+                                        setError(err.response.data.message || "Something Went Wrong")
+                                    }
+                                    else {
+                                        console.log("Error logging in: ", err.message);
+                                        setError("Something went wrong, try again!");
+                                    }
                                 } finally {
                                     setLoading(false);
                                 }
@@ -77,7 +85,7 @@ export const Signin = () => {
                     )}
                 </div>
 
-                <BottomWarning label={"Do not have an Account?"} buttonText={"Sign Up"} to={"/signup"} />
+                <BottomWarning label={"Do not have an Account?"} buttonText={"Sign Up"} to={"/sign-up"} />
             </div>
         </div>
     );

@@ -20,7 +20,6 @@ router.post("/register", [
     body('role').optional().isIn(['individual', 'business', 'charity']).withMessage('Invalid role'),
 ], registerUser);
 
-// Email in query (navigation)    /verify-otp?email=user@example.com
 router.post("/verify-otp", [
     body('enteredOtp').notEmpty().withMessage('OTP is required')
 ], verifyOtpController);
