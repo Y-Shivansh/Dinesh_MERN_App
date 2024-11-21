@@ -1,13 +1,24 @@
-# Node.js dependencies
-/node_modules/
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
 
-# React build files
-/build/
+node_modules
+dist
+dist-ssr
+*.local
 
-# IDE and editor settings specific to frontend
-.vscode/
-.idea/
-
-# OS files (for frontend)
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
 .DS_Store
-Thumbs.db
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
