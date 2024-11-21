@@ -1,6 +1,6 @@
-import FoodListing from "../models/foodListing.js";
-import { uploadOnCloudinary } from '../utils/cloudinary.js';
-import APIFeatures from '../utils/apiFeatures.js';
+import APIFeatures from "../utils/APIFeatures.js";
+import { uploadOnCloudinary } from "../utils/Cloudinary.js";
+import FoodListing from "../models/FoodListing.js";
 
 export const createFoodListing = async (req, res) => {
     try {
@@ -10,13 +10,18 @@ export const createFoodListing = async (req, res) => {
             category,
             quantity,
             expirationDate,
-            location,
+            // location,
             postedBy,
-        } = req.body;
-
+        } = {...req.body};
+        
+        // console.log(req.body);
+        // console.log(req.files);
+        // console.log(title);
+        
         const photos = req.files ? req.files.photos : [];
-
-        if (!title || !description || !category || !quantity || !expirationDate || !location || !postedBy) {
+        
+        
+        if (!title || !description || !category || !quantity || !expirationDate  || !postedBy) {
             return res.status(400).json({ error: "All required fields must be filled." });
         }
 
@@ -36,7 +41,7 @@ export const createFoodListing = async (req, res) => {
             category,
             quantity,
             expirationDate,
-            location,
+            // location,
             photos: uploadedPhotos,
             postedBy,
         });

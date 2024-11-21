@@ -2,7 +2,7 @@ import dotenv from 'dotenv';
 import fs from 'fs';
 import mongoose from 'mongoose';
 import path from 'path'; // Import path module
-import FoodListing from '../../models/FoodListing.js';// Correct path
+// import FoodListing from '../../models/foodListing.js';
 
 const envPath = '/Users/Shared/Files From f.localized/Web Devlopment/MERN_DIN/Dinesh_MERN_App/Server/dotenv.env';
 dotenv.config({ path: envPath });
