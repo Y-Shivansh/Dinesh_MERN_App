@@ -12,7 +12,6 @@ const donationSchema = new mongoose.Schema(
             ref: "User", 
             required: true 
         },
-        
         acceptedBy: { 
             type: mongoose.Schema.Types.ObjectId, 
             ref: "User" 

@@ -1,3 +1,4 @@
+import express from "express";
 import Donate from '../models/Donation.js';
 
 export const changeStatus = async (req, res) => {
@@ -37,3 +38,27 @@ export const changeStatus = async (req, res) => {
         });
     }
 };
+
+export const requestDonation=async(req,res)=>{
+    try{
+        const {foodListing,requestedBy}=req.body;
+        if(!foodListing||!requestedBy){
+            return res.status(400).json({error:'foodListing and requestedBy are required'});
+        }
+
+        const donation=new Donate({
+            foodListing,requestedBy
+        });
+        await donation.save();
+
+        res.status(201).json({
+            message:"Donation request successful",
+            donation,
+        });
+    }
+    catch(error){
+        console.error("Donation error occured",error);
+        res.status(500).json({error:"Internal Server Errior"})
+    }
+};
+
