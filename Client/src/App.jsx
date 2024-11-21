@@ -5,6 +5,7 @@ import { PrivateRoute } from './components/PrivateRoute'
 import { VerificationForm } from './pages/VerificationForm'
 import { ResetForm } from './pages/ResetForm'
 import { ResetFormVerification } from './pages/ResetFormVerificationForm'
+import Landing from './pages/Landing'
 // import { Landing } from './pages/Landing'
 
 function App() {
@@ -13,7 +14,7 @@ function App() {
     <>
       <BrowserRouter>
         <Routes>
-          {/* <Route path='/' element = {<Landing/>}/> */}
+          <Route path='/' element = {<Landing/>}/>
           <Route path="/sign-up" element={<Signup />} />
           <Route path="/sign-in" element={<Signin />} />
           <Route path="/signup/verify" element={<VerificationForm />} />
