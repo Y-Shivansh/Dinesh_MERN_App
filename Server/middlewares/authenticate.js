@@ -1,6 +1,5 @@
 import jwt from 'jsonwebtoken';
 import { SECRET_KEY } from '../config/config.js';
-import {promisify} from 'util'
 
 export const authMiddleware = async(req,res,next) => {
     try{
