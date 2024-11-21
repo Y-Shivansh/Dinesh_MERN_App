@@ -9,14 +9,16 @@ import fs from "fs";//file system
     });
     
     const uploadOnCloudinary=async(localFilePath)=>{
+        
         try{
             if(!localFilePath) return null
             //upload the file
+            // console.log(localFilePath);
             const response=await cloudinary.uploader.upload(localFilePath,{
                 resource_type:"auto"
             })
             //file has been uploaded
-            // console.log("FILE is uploaded on cloudinary ",response.url);
+            console.log("FILE is uploaded on cloudinary ",response.url);
             fs.unlinkSync(localFilePath)
             return response
 

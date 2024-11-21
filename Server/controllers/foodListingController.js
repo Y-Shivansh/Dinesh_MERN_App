@@ -22,9 +22,9 @@ export const createFoodListing = async (req, res) => {
         // console.log(req.files);
         // console.log(title);
         
-        const photos = req.files ? req.files.photos : [];
+        const photos = req.files ? req.files: [];
         
-        
+
         if (!title || !description || !category || !quantity || !expirationDate || !locationAddress || !longitude || !latitude  || !postedBy) {
             return res.status(400).json({ error: "All required fields must be filled." });
         }
@@ -40,11 +40,13 @@ export const createFoodListing = async (req, res) => {
         ) {
             return res.status(400).json({ error: "Invalid coordinates provided." });
         }
-
+        
         const uploadedPhotos = [];
         if (photos && photos.length > 0) {
+            
             for (const photo of photos) {
                 const uploadedImage = await uploadOnCloudinary(photo.path);
+                
                 if (uploadedImage) {
                     uploadedPhotos.push(uploadedImage.url);
                 }
