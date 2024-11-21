@@ -3,6 +3,7 @@ import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import { Link } from "react-router-dom";
 import image from "/assets/food-donation-image.jpg"; // Path to the image
+import Carousel  from "../components/Carousel";
 
 const Landing = () => {
   return (
@@ -33,7 +34,7 @@ const Landing = () => {
           </Link>
         </div>
       </header>
-      
+      <Carousel/>
       <main className="p-8">
         {/* Why Choose Us */}
         <section className="mt-8">

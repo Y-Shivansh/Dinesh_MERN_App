@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import FoodGrid from '../components/FoodGrid'
+import FoodGrid from '../components/FoodGrid';
 import Footer from '../components/Footer';
 import { Link } from 'react-router-dom';
+
 const FoodListingPage = () => {
   const [foodItems, setFoodItems] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -37,23 +38,31 @@ const FoodListingPage = () => {
 
   return (
     <div>
-        <nav className="bg-[#00baf2] p-4 text-white shadow-md fixed w-full top-0 z-10">
-     
+      <nav className="bg-[#00baf2] p-4 text-white shadow-md fixed w-full top-0 z-10 flex justify-between items-center">
+        {/* Logo */}
         <div className="text-2xl font-bold">
           <Link to="/" className="text-white hover:text-[#44d3ff] no-underline">
             FoodDonation
           </Link>
         </div>
 
-        
-     
-    </nav>
-      <h1 className="text-3xl pt-20 font-bold text-center mt-6">Food Listings</h1>
-      <FoodGrid foodItems={foodItems} />
-      <Footer/>
-    </div>
+        {/* Request Donation Button */}
+        <div>
+          <Link 
+            to="/request-donation" 
+            className="bg-white no-underline text-green-400 font-semibold px-4 py-2 rounded-lg shadow-md hover:bg-[#e3f7ff] hover:text-green-600 transition"
+          >
+            Request Donation
+          </Link>
+        </div>
+      </nav>
 
+      <h1 className="text-3xl pt-20 font-bold text-center mt-6">FOOD LISTINGS!</h1>
+      <FoodGrid foodItems={foodItems} />
+      <Footer />
+    </div>
   );
 };
 
 export default FoodListingPage;
+
