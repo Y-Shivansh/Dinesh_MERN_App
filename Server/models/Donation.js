@@ -29,11 +29,25 @@ const donationSchema = new mongoose.Schema(
         }, // pickup
 
         completionDate: { 
-            type: Date 
-        },
+            type: Date,
+            validate: {
+                validator: function(value) {
+                    return !this.scheduledPickup || value >= this.scheduledPickup;
+                },
+                message: "Completion date must be after the scheduled pickup date.",
+            }
+        }
+        ,
     },
     { timestamps: true }
 );
+
+donationSchema.methods.markAsCompleted = function() {
+    this.status = "completed";
+    this.completionDate = new Date();
+    return this.save();
+};
+
 
 const Donation = mongoose.model("Donation", donationSchema);
 export default Donation;
