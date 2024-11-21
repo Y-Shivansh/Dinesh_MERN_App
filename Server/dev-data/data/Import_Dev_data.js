@@ -3,6 +3,7 @@ import fs from 'fs';
 import mongoose from 'mongoose';
 import path from 'path'; // Import path module
 // import FoodListing from '../../models/foodListing.js';
+import Donation from '../../models/Donation.js'
 
 const envPath = '/Users/Shared/Files From f.localized/Web Devlopment/MERN_DIN/Dinesh_MERN_App/Server/dotenv.env';
 dotenv.config({ path: envPath });
@@ -25,7 +26,7 @@ mongoose
 const __dirname = path.dirname(new URL(import.meta.url).pathname);
 
 // Read the JSON file
-const filePath ='/Users/Shared/Files From f.localized/Web Devlopment/MERN_DIN/Dinesh_MERN_App/Server/dev-data/data/foodList.json';
+const filePath ='/Users/Shared/Files From f.localized/Web Devlopment/MERN_DIN/Dinesh_MERN_App/Server/dev-data/data/donation.json';
 
 if (!fs.existsSync(filePath)) {
   console.error(`Error: File not found at ${filePath}`);
@@ -37,7 +38,7 @@ const tours = JSON.parse(fs.readFileSync(filePath, 'utf-8'));
 // Import data into DB
 const importData = async () => {
   try {
-    await FoodListing.create(tours);
+    await Donation.create(tours);
     console.log('Data successfully loaded!');
   } catch (err) {
     console.error('Error importing data:', err);

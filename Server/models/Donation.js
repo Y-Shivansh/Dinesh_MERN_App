@@ -20,7 +20,7 @@ const donationSchema = new mongoose.Schema(
 
         status: {
             type: String,
-            enum: ["requested", "accepted", "scheduled", "completed", "rejected"],
+            enum: ["requested", "accepted", "scheduled", "completed"],
             default: "requested",
         },
 
