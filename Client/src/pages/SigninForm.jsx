@@ -63,7 +63,7 @@ export const Signin = () => {
                                         { email, password }
                                     );
                                     if (response.status === 200) {
-                                        navigate("/dashboard");
+                                        navigate("/food-listings");
                                     } else {
                                         console.log("Login failed: ", response.data.message);
                                         setError(response.data.message || "Login Failed")

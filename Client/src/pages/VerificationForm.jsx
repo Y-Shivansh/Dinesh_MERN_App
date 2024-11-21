@@ -32,7 +32,7 @@ export const VerificationForm = () => {
             );
 
             if (response.status === 201) {
-                navigate("/dashboard");
+                navigate("/food-listings");
             } else {
                 console.log(response.data.message);
                 setError(response.data.message);
