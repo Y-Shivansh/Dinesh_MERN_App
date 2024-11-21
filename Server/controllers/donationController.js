@@ -1,7 +1,7 @@
 import express from "express";
 import Donate from '../models/Donation.js';
 
-export const changeStatus = async (req, res) => {
+export const changeStatusAccepted = async (req, res) => {
     try {
         const userId = req.user.userId; 
 
@@ -17,7 +17,7 @@ export const changeStatus = async (req, res) => {
             return res.status(404).json({ msg: "Donation not found" });
         }
 
-        if (donation.status === "accepted") {
+        if (donation.status === "accepted" ||donation.status === "scheduled") {
             return res.status(400).json({ msg: "Donation has already been accepted" });
         }
 
@@ -105,5 +105,44 @@ export const getDonationDetails = async (req, res) => {
     } catch (error) {
         console.error("Error in getDonationDetails:", error);
         res.status(500).json({ error: "Internal Server Error" });
+    }
+};
+export const changeStatusScheduled = async(req,res)=>{
+    try {
+        const {scheduledPickup } = req.body;
+        if (!req.params.id) {
+            return res.status(400).json({ msg: "Donation ID is required" });
+        }
+
+        
+        const donation = await Donate.findById(req.params.id);
+
+        if (!donation) {
+            return res.status(404).json({ msg: "Donation not found" });
+        }
+
+        if (donation.status === "scheduled" || donation.status === "completed"  ) {
+            return res.status(400).json({ msg: "Donation Finished" });
+        }
+
+       
+        donation.status = "scheduled";
+        donation.scheduledPickup = new Date(scheduledPickup);
+
+        if (isNaN(donation.scheduledPickup) || isNaN(donation.completionDate)) {
+            return res.status(400).json({ msg: "Invalid date format" });
+        }
+        const updatedDonation = await donation.save();
+
+        res.status(200).json({
+            msg: "Donation status updated successfully",
+            donation: updatedDonation,
+        });
+    } catch (err) {
+        console.error("Error updating donation status:", err);
+        res.status(500).json({
+            msg: "Internal Server Error",
+            error: err.message,
+        });
     }
 };
