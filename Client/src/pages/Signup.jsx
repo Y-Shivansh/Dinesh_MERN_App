@@ -8,67 +8,70 @@ import { useNavigate } from "react-router-dom";
 import axios from 'axios'
 export const Signup = () => {
     const navigate = useNavigate()
+    const [name, setName] = useState("");
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("");
-    const [firstName, setFirstName] = useState("");
-    const [lastName, setLastName] = useState("")
+    const [role, setRole] = useState("");
+    const [error,setError] = useState("")
     return (
         <div className="h-screen bg-[#e0f5fd] flex flex-col items-center">
             <div className="w-96 mt-20 text-center p-8 bg-gray-100 rounded-xl shadow-lg">
                 <Heading label={"Sign up"} />
                 <SubHeading label={"Enter your signup credentials"} />
-                <InputBox placeholder="Simpson" label={"First Name"}
+                <InputBox placeholder="user" label={"Name"}
                     type={"text"}
-                    value={firstName}
+                    value={name}
                     onChange={(e) => {
-                        setFirstName(e.target.value)
+                        setName(e.target.value)
                     }} />
-                <InputBox placeholder="Curk" label={"Last Name"}
-                    type={"text"}
-                    value={lastName}
-                    onChange={(e) => {
-                        setLastName(e.target.value)
-                    }} />
-                <InputBox placeholder="curk@gmail.com" label={"Email"}
+                <InputBox placeholder="user@gmail.com" label={"Email"}
                     type={"email"}
                     value={email}
                     onChange={(e) => {
                         setEmail(e.target.value)
                     }} />
-                <InputBox placeholder="123456" label={"Password"}
+                <InputBox placeholder="min 6 digits." label={"Password"}
                     type={"password"}
                     value={password}
                     onChange={(e) => {
                         setPassword(e.target.value)
                     }} />
+                <InputBox placeholder="individual/business/charity" label={"role"}
+                    type={"text"}
+                    value={role}
+                    onChange={(e) => {
+                        setRole(e.target.value)
+                    }} />
                 <div className="pt-4">
-                    <Button label={"Sign Up"} onClick={async()=>{
-                         if (!firstName || !lastName || !email || !password) {
+                {/* {error && <p className="text-red-500 text-sm">{error}</p>} */}
+                    <Button label={"Sign Up"} onClick={async () => {
+                        if (!name || !email || !password) {
                             console.log("All fields are required.");
                             return;
                         }
-                        try{
-                            const response = await axios.post("http://localhost:3000/api/vi/user/signup",{
-                                firstName,
-                                lastName,
+                        try {
+                            if (role.length === 0){
+                                setRole("individual")
+                            }
+                            const response = await axios.post("http://localhost:3000/api/user/register", {
+                                name,
                                 email,
-                                password
+                                password,
+                                role
                             })
-                            if (response.data.message === "User created successfully") {
-                                localStorage.setItem('user', JSON.stringify(response.data.user));
-                                localStorage.setItem('firstName', JSON.stringify(response.data.firstName));
-                                localStorage.setItem('token', response.data.token)
-                                navigate("/dashboard");
+                            if (response.data.message === "Otp sent") {
+                                navigate(`/signup/verify?email=${email}`);
                             } else {
                                 console.log("Signup failed: ", response.data.message);
                             }
                         }
-                        catch(err){
+                        catch (err) {
+                            setError(err)
                             console.log("Error Signing up: ", err.data);
                         }
-                    }}/>
+                    }} />
                 </div>
-                <BottomWarning label={"Already have an account?"} buttonText={"Sign In"} to={"/signin"} />
+                <BottomWarning label={"Already have an account?"} buttonText={"Sign In"} to={"/sign-in"} />
             </div>
         </div>
         // </div>

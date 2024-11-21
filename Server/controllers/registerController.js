@@ -16,7 +16,7 @@ export const registerUser = async (req, res) => {
             return res.status(400).json({ message: 'User already exists' });
         }
         const send = await sendOtp(email,{name,password,role});
-        return res.json("Otp sent!");
+        return res.json({message: "Otp sent"});
     }
     catch (error) {
         console.error(error);

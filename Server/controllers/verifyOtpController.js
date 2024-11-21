@@ -17,7 +17,7 @@ export const verifyOtpController = async (req, res) => {
         }
         const otp = otpRecord.otp;
         const currentTIme = new Date();
-        if (currentTIme < otpRecord.expiry) {
+        if (currentTIme > otpRecord.expiry) {
             await Otp.deleteOne({ email });
             return res.status(400).json({ message: 'Expired Otp' });
         }

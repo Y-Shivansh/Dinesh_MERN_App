@@ -8,7 +8,7 @@ dotenv.config();
 export const sendOtp = async (email,additionalData={}) => {
     try {
         const otp = crypto.randomInt(100000, 999999).toString();
-        const expiryTime = new Date(Date.now() + 10 * 60 + 1000)
+        const expiryTime = new Date(Date.now() + 10 * 60  *1000)
         const newOtpData = {
             email,
             otp,
@@ -40,26 +40,5 @@ export const sendOtp = async (email,additionalData={}) => {
     }
     catch (err) {
         console.log("Errors: ", err);
-    }
-}
-export const verifyOtp = async (enteredOtp, email) => {
-    try {
-        const otpRecord = await Otp.findOne({ email });
-        if (!otpRecord) {
-            return { message: 'OTP not found' };
-        }
-        const currentTime = new Date()
-        if (otpRecord.expiry < currentTime) {
-            return { message: 'OTP expired' };
-        }
-        if (enteredOtp !== otpRecord.otp) {
-            return { message: 'Invalid OTP' };
-        }
-        await Otp.deleteOne({ email });
-        return { message: 'OTP verified successfully' };
-    }
-    catch (error) {
-        console.error("Error Verifying Otp: ",error);
-        res.status(500).json({ message: 'Error during OTP verification' });
     }
 }
