@@ -10,9 +10,13 @@ export const createFoodListing = async (req, res) => {
             category,
             quantity,
             expirationDate,
-            // location,
+            locationAddress, 
+            longitude, 
+            latitude, 
             postedBy,
         } = {...req.body};
+        // console.log(location);
+        
         
         // console.log(req.body);
         // console.log(req.files);
@@ -21,8 +25,20 @@ export const createFoodListing = async (req, res) => {
         const photos = req.files ? req.files.photos : [];
         
         
-        if (!title || !description || !category || !quantity || !expirationDate  || !postedBy) {
+        if (!title || !description || !category || !quantity || !expirationDate || !locationAddress || !longitude || !latitude  || !postedBy) {
             return res.status(400).json({ error: "All required fields must be filled." });
+        }
+        const location = {
+            address: locationAddress,
+            coordinates: [parseFloat(longitude), parseFloat(latitude)], // Parse as numbers
+        };
+
+        if (
+            isNaN(location.coordinates[0]) ||
+            isNaN(location.coordinates[1]) ||
+            location.coordinates.length !== 2
+        ) {
+            return res.status(400).json({ error: "Invalid coordinates provided." });
         }
 
         const uploadedPhotos = [];
@@ -34,14 +50,20 @@ export const createFoodListing = async (req, res) => {
                 }
             }
         }
+        const parsedQuantity = parseInt(quantity, 10);
+        const parsedExpirationDate = new Date(expirationDate);
+
+        if (isNaN(parsedQuantity) || parsedExpirationDate.toString() === "Invalid Date") {
+            return res.status(400).json({ error: "Invalid quantity or expiration date." });
+        }
 
         const newListing = new FoodListing({
             title,
             description,
             category,
-            quantity,
-            expirationDate,
-            // location,
+            quantity: parsedQuantity,
+            expirationDate: parsedExpirationDate,
+            location,
             photos: uploadedPhotos,
             postedBy,
         });
