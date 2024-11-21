@@ -1,7 +1,8 @@
 import jwt from 'jsonwebtoken';
 import { SECRET_KEY } from '../config/config.js';
+import {promisify} from 'util'
 
-export const authMiddleware = (req,res,next) => {
+export const authMiddleware = async(req,res,next) => {
     try{
         const {token} = req.cookies;
         if (!token) {
@@ -11,9 +12,16 @@ export const authMiddleware = (req,res,next) => {
             if(err){
                 res.status(403).json({message: "Forbidden: Invalid Token"})
             }
+            
             req.user = user;
+            
             next();
         })
+        // const decoded=await promisify(jwt.verify)(token,SECRET_KEY);
+        // console.log(decoded);
+        // req.user=decoded.userId;
+        // req.locals.user=decoded.userId;
+        
     }
     catch(err){
         console.error(err);
@@ -21,16 +29,15 @@ export const authMiddleware = (req,res,next) => {
     }
 }
 
-
 export const authenticate = async (req, res, next) => {
     try {
-        const token = req.headers.authorization?.split(" ")[1]; // Token extracted from headers
+        const token = req.cookies.token || req.headers.authorization?.split(" ")[1];
         if (!token) {
             return res.status(401).json({ message: "Unauthorized: No token provided" });
         }
 
-        const decoded = jwt.verify(token, SECRET_KEY); // Verify token
-        req.user = await User.findById(decoded.id).select("-password"); // Fetch user from DB
+        const decoded = jwt.verify(token, SECRET_KEY);
+        req.user = await User.findById(decoded.id).select("-password");
         if (!req.user) {
             return res.status(401).json({ message: "Unauthorized: Invalid user" });
         }

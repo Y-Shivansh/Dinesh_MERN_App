@@ -66,30 +66,34 @@ router.get("/profile/:id", authMiddleware, async (req, res) => {
     }
 });
 
+
 router.put("/profile/:id", authMiddleware, async (req, res) => {
     try {
-        if (req.user.id !== req.params.id && req.user.role !== "admin") {
+        if (req.user.userId !== req.params.id) {
             return res.status(403).json({ message: "Not authorized" });
         }
 
-// router.put("/profile/:id", checkAuth, async (req, res) => {
-//     try {
-//         if (req.user.id !== req.params.id && req.user.role !== "admin") {
-//             return res.status(403).json({ message: "Not authorized" });
-//         }
+        const { password, ...updateData } = req.body;
+        console.log(req.body);
+        
 
-        const updatedUser = await User.findByIdAndUpdate(req.params.id, req.body, {
-            new: true,
+        const updatedUser = await User.findByIdAndUpdate(req.params.id, updateData, {
+            new: true, 
+            runValidators: true,
         });
 
-        if (!updatedUser) return res.status(404).json({ message: "User not found" });
+        if (!updatedUser) {
+            return res.status(404).json({ message: "User not found" });
+        }
 
         res.json(updatedUser);
     } catch (error) {
-        console.error(error);
+        console.error("Error updating profile:", error.message);
         res.status(500).json({ message: "Server error" });
     }
 });
+
+
 
 //delete
 
