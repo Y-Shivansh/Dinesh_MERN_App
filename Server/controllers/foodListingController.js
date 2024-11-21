@@ -10,14 +10,13 @@ export const createFoodListing = async (req, res) => {
             category,
             quantity,
             expirationDate,
-            locationAddress, 
-            longitude, 
-            latitude, 
+            locationAddress,
+            // longitude,
+            // latitude, 
             postedBy,
         } = {...req.body};
+        const {longitude, latitude} =  req.body || {}
         // console.log(location);
-        
-        
         // console.log(req.body);
         // console.log(req.files);
         // console.log(title);
@@ -25,7 +24,8 @@ export const createFoodListing = async (req, res) => {
         const photos = req.files ? req.files: [];
         
 
-        if (!title || !description || !category || !quantity || !expirationDate || !locationAddress || !longitude || !latitude  || !postedBy) {
+        if (!title || !description || !category || !quantity || !expirationDate || !locationAddress || longitude=== undefined || latitude === undefined  || !postedBy) {
+        // if (!title || !description || !category || !quantity || !expirationDate || !locationAddress || !longitude || !latitude  || !postedBy) {
             return res.status(400).json({ error: "All required fields must be filled." });
         }
         const location = {

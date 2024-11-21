@@ -20,7 +20,10 @@ export const sendOtp = async (email, additionalData = {}) => {
             { email }, // Find by email
             { $set: newOtpData }, // Update the OTP details
             { upsert: true } // Insert if no record exists
-        );
+        ).catch(err => {
+            console.error('Error while updating OTP in database:', err);
+            throw new Error('Failed to update OTP in database');
+          });
 
         const transporter = nodemailer.createTransport({
             service: 'gmail',

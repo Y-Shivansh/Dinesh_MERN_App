@@ -9,3 +9,7 @@ export const generateToken = (userId) => {
     )
     return token;
 }
+export const adminCredentials =  {
+    username: 'admin',
+    password: 'admin123',
+}

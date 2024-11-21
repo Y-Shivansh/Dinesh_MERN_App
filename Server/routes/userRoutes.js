@@ -54,7 +54,7 @@ router.put("/update-password",[
 ], authMiddleware, updatePassword );
 
 
-router.get("/profile/:id", authMiddleware, async (req, res) => {
+router.get("/profile/:id", authenticate, async (req, res) => {
     try {
         const user = await User.findById(req.params.id);
         if (!user) return res.status(404).json({ message: "User not found" });
@@ -124,7 +124,6 @@ router.get("/users", authenticate,isAdmin, async (req, res) => {
         res.status(500).json({ message: "Server error" });
     }
 });
-
 
 router.post("/profile/:id/reviews", authenticate, async (req, res) => {
     try {

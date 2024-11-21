@@ -38,6 +38,10 @@ const foodListingSchema = new mongoose.Schema(
             ref: "User", 
             required: true 
         },
+        isModerated: { 
+            type: Boolean, 
+            default: false 
+        }, 
     },
     { timestamps: true }
 );

@@ -19,17 +19,30 @@ const userSchema = new mongoose.Schema({
         enum: ["individual", "business", "charity"],
         default: "individual"
      },
+     status: {
+        type: String,
+        enum: ['active', 'suspended'],
+        default: 'active',
+    },
      profilePicture: { 
         type: String, 
         default: "" 
-    }, //Cloudinary 
+    }, 
+    reviews: [
+        {
+            reviewer: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+            comment: String,
+            rating: Number,
+        },
+    ],
+    rating: {
+        type: Number,
+        default: 0,
+    },
+    //Cloudinary 
      emailVerified: { 
         type: Boolean, 
         default: false 
-    },
-     rating: { 
-        type: Number, 
-        default: 0 
     },
      donationHistory: [{ type: mongoose.Schema.Types.ObjectId, ref: "Donation" }],
  },
