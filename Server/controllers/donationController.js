@@ -62,3 +62,48 @@ export const requestDonation=async(req,res)=>{
     }
 };
 
+export const markDonationCompleted = async (req, res) => {
+    console.log("hello");
+    
+    try {
+        const { id } = req.params;
+        
+
+        const donation = await Donate.findByIdAndUpdate(
+            id, 
+            { status: "completed", completionDate: new Date() }, 
+            { new: true }
+        );
+
+        if (!donation) {
+            return res.status(404).json({ error: "Donation not found." });
+        }
+
+
+        res.status(200).json({ message: "Donation marked as completed.", donation });
+    } catch (error) {
+        console.error("Error in markDonationCompleted:", error);
+        res.status(500).json({ error: "Internal Server Error" });
+    }
+};
+
+
+export const getDonationDetails = async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        const donation = await Donate.findById(id)
+            .populate("foodListing")
+            .populate("requestedBy")
+            .populate("acceptedBy");
+
+        if (!donation) {
+            return res.status(404).json({ error: "Donation not found." });
+        }
+
+        res.status(200).json({ donation });
+    } catch (error) {
+        console.error("Error in getDonationDetails:", error);
+        res.status(500).json({ error: "Internal Server Error" });
+    }
+};
