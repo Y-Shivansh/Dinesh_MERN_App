@@ -73,7 +73,7 @@ router.put("/profile/:id", authMiddleware, async (req, res) => {
         }
 
         const { password, ...updateData } = req.body;
-        console.log(req.body);
+        // console.log(req.body);
         
 
         const updatedUser = await User.findByIdAndUpdate(req.params.id, updateData, {

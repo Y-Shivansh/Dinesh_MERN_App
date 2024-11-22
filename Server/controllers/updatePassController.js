@@ -4,31 +4,34 @@ import { validationResult } from 'express-validator';
 
 export const updatePassword = async (req, res) => {
     try {
-        const userId = req.user?.userId; // Fetched from middleware
+        const userId = req.user; // Fetched from middleware
         const errors = validationResult(req);
 
         if (!errors.isEmpty()) {
             return res.status(400).json({ errors: errors.array() });
         }
-        console.log(userId);
+        // console.log("HELLO" , userId);
         
         const { newPassword, oldPassword } = req.body;
 
         // Fetch user using userId from middleware
         const user = await User.findById(userId);
+        // console.log(user);
         
         if (!user) {
             return res.status(404).json({ message: "User not found" });
         }
-
         // Compare old password with the current hashed password
         const isMatch = await bcrypt.compare(oldPassword, user.password);
+        
         if (!isMatch) {
             return res.status(400).json({ message: "Your entered password does not match your last password" });
         }
 
         // Hash the new password and save it
         const hashedPassword = await bcrypt.hash(newPassword, 10);
+        console.log(hashedPassword);
+        
         user.password = hashedPassword;
         await user.save();
 

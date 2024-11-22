@@ -167,7 +167,7 @@ export const getAllFoodListings = async (req, res) => {
         }
         // console.log(user);
         
-        console.log(allFoodItems);
+        // console.log(allFoodItems);
 
         res.status(200).json({
             allFoodItems

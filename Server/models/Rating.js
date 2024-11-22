@@ -13,7 +13,7 @@ const ratingSchema = new mongoose.Schema(
             required: true 
         },
         rating: { 
-            type: mongoose.Schema.Types.ObjectId, ref: 'Rating',
+            type: Number,
             min: 0, 
             max: 5, 
             default: 0
