@@ -36,10 +36,10 @@ function Carousel() {
     }, []);
 
     return (
-        <div id="services" className="bg-blue-399 overflow-hidden relative w-full border-t-[.3px] border-slate-300 sm:opacity-95 box-border" data-carousel="static">
+        <div id="services" className=" overflow-hidden relative w-full border-t-[.3px] border-slate-300 sm:opacity-95 box-border" data-carousel="static">
             {/* Title */}
             <div className="px-3 flex flex-col items-center justify-center">
-                <div className="text-gray-300 sm:text-[2.5rem] text-[1.8rem] my-5 uppercase font-wallpoet">What's on deck?</div>
+                <div className="text-customBrown sm:text-[2.5rem] text-[1.8rem] my-5 uppercase font-wallpoet">What's on deck?</div>
             </div>
             {/* Carousel wrapper */}
             <div className="px-3 flex flex-col items-center justify-center min-h-[500px] md:h-[70vh] h-full">
@@ -50,7 +50,7 @@ function Carousel() {
                             <img className="w-48 h-48 sm:w-72 sm:h-72 rounded-full floating-image shadow-[0px_10px_10px_0px_rgba(256,256,256,0.2)]" src="https://as1.ftcdn.net/v2/jpg/02/84/84/94/1000_F_284849453_UzNIRRcuYM5P1njdxai0WPQxwEKrz9uJ.jpg" alt="Slide 1" />
                         </a>
                     </div>
-                    <div className="text-slate-300 text-justify font-alternates font-thin md:text-lg md:tracking-wide md:leading-7 text-slide">
+                    <div className="text-black text-justify font-alternates font-thin md:text-lg md:tracking-wide md:leading-7 text-slide">
                         Lorem ipsum dolor sit amet consectetur adipisicing elit. Eum reiciendis deleniti eos omnis animi, dolore reprehenderit iste ex ratione accusamus expedita, dolores repellat officiis aut delectus veniam aliquam rem. Minima quaerat mollitia tenetur exercitationem. Lorem ipsum dolor sit, amet consectetur adipisicing elit. Temporibus aperiam omnis harum, amet culpa quia accusamus pariatur hic cum impedit!
                     </div>
                 </div>
@@ -62,7 +62,7 @@ function Carousel() {
                             <img className="w-48 h-48 sm:w-72 sm:h-72 rounded-full floating-image shadow-[0px_10px_10px_0px_rgba(256,256,256,0.2)]" src="https://cdn4.vectorstock.com/i/1000x1000/44/13/cartoon-hands-with-control-drone-isolated-vector-10744413.jpg" alt="Slide 2" />
                         </a>
                     </div>
-                    <div className="text-slate-300 text-justify font-alternates font-thin md:text-lg md:tracking-wide md:leading-7 text-slide">
+                    <div className="text-black text-justify font-alternates font-thin md:text-lg md:tracking-wide md:leading-7 text-slide">
                         Lorem ipsum dolor sit amet consectetur, adipisicing elit. Saepe cupiditate illum blanditiis ut, totam libero delectus distinctio quasi quis expedita aut facere eligendi. Obcaecati, repellendus accusamus? Soluta officiis ratione aliquam repellat quaerat. Placeat, rerum! Lorem ipsum dolor sit amet consectetur adipisicing elit. Perspiciatis eius facilis, molestiae, amet harum quibusdam praesentium debitis ullam cum quia placeat deserunt? Quibusdam!
                     </div>
                 </div>
@@ -74,7 +74,7 @@ function Carousel() {
                             <img className="w-48 h-48 sm:w-72 sm:h-72 rounded-full floating-image shadow-[0px_10px_10px_0px_rgba(256,256,256,0.2)]" src="https://img.freepik.com/premium-vector/drawing-drone-with-green-top-blue-green-background_410516-78882.jpg" alt="Slide 3" />
                         </a>
                     </div>
-                    <div className="text-slate-300 text-justify font-alternates font-thin md:text-lg md:tracking-wide md:leading-7 text-slide">
+                    <div className="text-black text-justify font-alternates font-thin md:text-lg md:tracking-wide md:leading-7 text-slide">
                         Lorem ipsum dolor sit amet consectetur, adipisicing elit. Saepe cupiditate illum blanditiis ut, totam libero delectus distinctio quasi quis expedita aut facere eligendi. Obcaecati, repellendus accusamus? Soluta officiis ratione aliquam repellat quaerat. Placeat, rerum! Lorem ipsum dolor sit amet consectetur adipisicing elit. Perspiciatis eius facilis, molestiae, amet harum quibusdam praesentium debitis ullam cum quia placeat deserunt? Quibusdam!
                     </div>
                 </div>
@@ -99,7 +99,7 @@ function Carousel() {
             >
                 <span className="inline-flex items-center justify-center w-10 h-10">
                     <svg
-                        className="w-4 h-6 text-white dark:text-gray-800 rtl:rotate-180 hover:dark:text-gray-500"
+                        className="w-4 h-6 text-black dark:text-gray-800 rtl:rotate-180 hover:dark:text-gray-500"
                         aria-hidden="true"
                         xmlns="http://www.w3.org/2000/svg"
                         fill="none"
@@ -124,7 +124,7 @@ function Carousel() {
             >
                 <span className="inline-flex items-center justify-center w-10 h-10">
                     <svg
-                        className="w-4 h-6 text-white dark:text-gray-800 rtl:rotate-180 hover:dark:text-gray-500"
+                        className="w-4 h-6 text-black dark:text-gray-800 rtl:rotate-180 hover:dark:text-gray-500"
                         aria-hidden="true"
                         xmlns="http://www.w3.org/2000/svg"
                         fill="none"
