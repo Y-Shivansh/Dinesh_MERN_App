@@ -3,7 +3,10 @@ import { SECRET_KEY } from '../config/config.js';
 
 export const authMiddleware = async(req,res,next) => {
     try{
-        const {token} = req.cookies;
+        const {token} = req.cookies ;
+        console.log(token);
+        
+        
         if (!token) {
             return res.status(401).json({ message: 'Unauthorized: No token provided' });
         }

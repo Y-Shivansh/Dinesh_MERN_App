@@ -14,8 +14,9 @@ import { loginAdmin } from "./controllers/loginAdmin.js";
 // import auth from './routes/userRoutes';
 const app = express();
 const corsOptions = {
-    origin: 'http://localhost:5173', // frontend origin
+    origin: 'http://localhost:5173' || 'http://localhost:3000', // frontend origin
     credentials: true, // Allowing cookies and other credentials
+    allowedHeaders: ['Content-Type', 'Authorization'],
 };
 
 app.use(helmet());

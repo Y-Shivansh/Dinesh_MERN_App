@@ -45,6 +45,7 @@ const userSchema = new mongoose.Schema({
         default: false 
     },
      donationHistory: [{ type: mongoose.Schema.Types.ObjectId, ref: "Donation" }],
+     foodItems: [{ type: mongoose.Schema.Types.ObjectId, ref: "FoodListing" }] 
  },
  { timestamps: true }
 );

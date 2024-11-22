@@ -54,7 +54,7 @@ router.put("/update-password",[
 ], authMiddleware, updatePassword );
 
 
-router.get("/profile/:id", authenticate, async (req, res) => {
+router.get("/profile/:id", authMiddleware, async (req, res) => {
     try {
         const user = await User.findById(req.params.id);
         if (!user) return res.status(404).json({ message: "User not found" });
@@ -96,7 +96,7 @@ router.put("/profile/:id", authMiddleware, async (req, res) => {
 
 //delete
 
-router.delete("/profile/:id", authenticate, async (req, res) => {
+router.delete("/profile/:id", authMiddleware, async (req, res) => {
     try {
         if (req.user.id !== req.params.id && req.user.role !== "admin") {
             return res.status(403).json({ message: "Not authorized" });
@@ -115,17 +115,17 @@ router.delete("/profile/:id", authenticate, async (req, res) => {
 
 
 
-router.get("/users", authenticate,isAdmin, async (req, res) => {
-    try {
-        const users = await User.find();
-        res.json(users);
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: "Server error" });
-    }
-});
+// router.get("/users", authenticate,isAdmin, async (req, res) => {
+//     try {
+//         const users = await User.find();
+//         res.json(users);
+//     } catch (error) {
+//         console.error(error);
+//         res.status(500).json({ message: "Server error" });
+//     }
+// });
 
-router.post("/profile/:id/reviews", authenticate, async (req, res) => {
+router.post("/profile/:id/reviews", authMiddleware, async (req, res) => {
     try {
         const { comment, rating } = req.body;
         const user = await User.findById(req.params.id);

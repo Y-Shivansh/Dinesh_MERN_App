@@ -16,9 +16,9 @@ const FoodGrid = ({ foodItems }) => {
               alt={foodItem.title} 
               className="w-full h-48 object-cover rounded-lg" 
             />
-            <h3 className="text-xl font-semibold mt-2">{foodItem.title}</h3>
-            <p className="text-gray-600">{foodItem.description}</p>
-            <p className="text-gray-500 mt-2">Category: {foodItem.category}</p>
+            <h3 className="text-xl font-semibold mt-2 text-headingCol">{foodItem.title}</h3>
+            <p className="text-gray-700">{foodItem.description}</p>
+            <p className="text-gray-500 mt-2"> Category: {foodItem.category}</p>
             <p className="text-gray-500">Quantity: {foodItem.quantity}</p>
             <p className="text-gray-500">Expires on: {new Date(foodItem.expirationDate).toLocaleDateString()}</p>
           </Link>

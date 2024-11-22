@@ -7,7 +7,7 @@ const router = express.Router();
 router.post("/", createRating);
 
 // Route to get all ratings for a specific user
-router.get("/user/:userId", getRatingsForUser);
+router.get("/user/rating/:userId", getRatingsForUser);
 
 // Route to get all ratings given by a specific user
 router.get("/ratedBy/:userId", getRatingsByUser);

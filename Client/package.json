@@ -10,6 +10,8 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@heroicons/react": "^2.2.0",
+    "@material-tailwind/react": "^2.1.10",
     "axios": "^1.7.7",
     "bootstrap": "^5.3.3",
     "fix": "^0.0.3",
@@ -20,7 +22,8 @@
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.26.2",
     "react-scroll": "^1.9.0",
-    "react-spinners": "^0.14.1"
+    "react-spinners": "^0.14.1",
+    "react-toastify": "^10.0.6"
   },
   "devDependencies": {
     "@types/react": "^18.3.8",
