@@ -5,19 +5,17 @@ export const authMiddleware = async(req,res,next) => {
     try{
         const {token} = req.cookies ;
         // const token = req.cookies.token || req.headers.authorization?.split(" ")[1];
-        console.log(token);
+        // console.log(token);
         
         if (!token) {
             return res.status(401).json({ message: 'Unauthorized: No token provided' });
         }
-        const decoded = jwt.verify(token, SECRET_KEY, (err,user)=>{
+        jwt.verify(token, SECRET_KEY, (err,decoded)=>{
             if(err){
                 res.status(403).json({message: "Forbidden: Invalid Token"})
             }
             
-            req.user = user;
-            console.log(user)
-            
+            req.user = decoded;
             next();
         })
         // const decoded=await promisify(jwt.verify)(token,SECRET_KEY);

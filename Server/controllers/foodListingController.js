@@ -139,8 +139,8 @@ export const deleteFoodListing = async (req, res) => {
             return res.status(404).json({ error: "Food listing not found." });
         }
 
-         // Ensure the logged-in user is the one who posted the listing
-         if (deletedListing.postedBy.toString() !== req.user._id.toString()) {
+        // Ensure the logged-in user is the one who posted the listing
+        if (deletedListing.postedBy.toString() !== req.user._id.toString()) {
             return res.status(403).json({ error: "You are not authorized to delete this listing." });
         }
 
@@ -157,26 +157,29 @@ export const deleteFoodListing = async (req, res) => {
 
 export const getAllFoodListings = async (req, res) => {
     try {
+        const user = req.user?.userId;
         const allFoodItems = await FoodListing.find();
         if (!allFoodItems) {
-          return res.status(404).json({
-            status: 'fail',
-            message: 'Food item not found',
-          });
+            return res.status(404).json({
+                status: 'fail',
+                message: 'Food item not found',
+            });
         }
-        console.log(allFoodItems);
+        // console.log(user);
         
+        console.log(allFoodItems);
+
         res.status(200).json({
-            allFoodItems,
+            allFoodItems
         });
-      }catch (err) {
+    } catch (err) {
         // Handle any errors
         console.log(err);
         res.status(400).json({
-          status: 'error',
-          message: 'Error fetching food item',
+            status: 'error',
+            message: 'Error fetching food item',
         });
-      }
+    }
 }
 
 
@@ -188,7 +191,7 @@ export const getFilteredFoodListings = async (req, res) => {
             .fieldLimiting();
 
         const newFood = await features.query;
-        
+
         res.status(200).json({
             length: newFood.length,
             newFood
@@ -204,35 +207,22 @@ export const getFilteredFoodListings = async (req, res) => {
 
 export const getFoodListingById = async (req, res) => {
     try {
-        // Get the ID from request parameters
         const foodId = req.params.id;
-    
-        // Find the food item by ID
         const foodItem = await FoodListing.findById(foodId);
-    
-        // If the food item is not found, send a 404 response
+
         if (!foodItem) {
-          return res.status(404).json({
-            status: 'fail',
-            message: 'Food item not found',
-          });
+            return res.status(404).json({
+                status: 'fail',
+                message: 'Food item not found',
+            });
         }
-    
-        // Return the found food item in the response
-        console.log(foodItem);
-        
-        res.status(200).json({
-          status: 'success',
-          data: {
-            foodItem,
-          },
-        });
-      }catch (err) {
-        // Handle any errors
+        res.status(200).json({foodItem});
+    } catch (err) {
+
         console.log(err);
         res.status(400).json({
-          status: 'error',
-          message: 'Error fetching food item',
+            status: 'error',
+            message: 'Error fetching food item',
         });
-      }
+    }
 }

@@ -1,4 +1,5 @@
 import Rating from "../models/Rating.js"; // Import the Rating model
+import User from "../models/user.js";
 
 // Create a new rating
 export const createRating = async (req, res) => {
@@ -24,13 +25,23 @@ export const createRating = async (req, res) => {
 export const getRatingsForUser = async (req, res) => {
     try {
         const { userId } = req.params;
-        const ratings = await Rating.find({ ratedFor: userId }).populate("ratedBy", "username");
+        // console.log(userId);
+        
+        const ratings = await Rating.find();
+        // console.log(ratings);
+        
+        const user = await User.find({userId})
+        // console.log(user);
+        
 
-        if (!ratings || ratings.length === 0) {
-            return res.status(404).json({ message: "No ratings found for this user" });
+        if (!ratings) {
+            return res.status(403).json({ 
+                message: "No ratings found for this user" });
         }
-
-        res.status(200).json(ratings);
+        return res.status(200).json({
+            user,
+            ratings
+        })
     } catch (error) {
         res.status(500).json({ message: "Error fetching ratings", error });
     }
@@ -41,12 +52,14 @@ export const getRatingsByUser = async (req, res) => {
     try {
         const { userId } = req.params;
         const ratings = await Rating.find({ ratedBy: userId }).populate("ratedFor", "username");
-
-        if (!ratings || ratings.length === 0) {
-            return res.status(404).json({ message: "No ratings found by this user" });
+    
+        if (!ratings) {
+            return res.status(403).json({ 
+                message: "No ratings found for this user" });
         }
-
-        res.status(200).json(ratings);
+        return res.status(200).json({
+            ratings
+        })
     } catch (error) {
         res.status(500).json({ message: "Error fetching ratings", error });
     }

@@ -11,23 +11,24 @@ import {
   Button,
 } from "@material-tailwind/react";
 
-const handleLogout = async () => {
-  try {
-    const response = await axios.post("http://localhost:3000/api/user/logout", {}, { withCredentials: true });
 
-    if (response.status === 200) {
-      navigate("/");
-    } else {
-      console.error("Logout failed:", response.data);
-    }
-  } catch (error) {
-    console.error("Error during logout:", error.message);
-  }
-};
 
 export function NestedMenu({title, m1,m2, m3, mn1,mn2,mn3,m4}) {
   const navigate = useNavigate();
   const [openMenu, setOpenMenu] = React.useState(false);
+  const handleLogout = async () => {
+    try {
+      const response = await axios.post("http://localhost:3000/api/user/logout", {}, { withCredentials: true });
+  
+      if (response.status === 200) {
+        navigate("/");
+      } else {
+        console.error("Logout failed:", response.data);
+      }
+    } catch (error) {
+      console.error("Error during logout:", error.message);
+    }
+  };
 
   return (
     <Menu className="">
@@ -36,7 +37,7 @@ export function NestedMenu({title, m1,m2, m3, mn1,mn2,mn3,m4}) {
       </MenuHandler>
       <MenuList>
         <MenuItem >{m1}</MenuItem>
-        <MenuItem>{m2}</MenuItem>
+        {/* <MenuItem>{m2}</MenuItem> */}
         {/* Nested Menu */}
         <Menu
           placement="right-start"

@@ -36,7 +36,7 @@ const userSchema = new mongoose.Schema({
         },
     ],
     rating: {
-        type: Number,
+        type: mongoose.Schema.Types.ObjectId, ref: 'Rating',
         default: 0,
     },
     //Cloudinary 

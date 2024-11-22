@@ -9,14 +9,14 @@ const ratingSchema = new mongoose.Schema(
         },
         ratedFor: { 
             type: mongoose.Schema.Types.ObjectId, 
-            ref: "User", 
+            ref: "FoodListing", 
             required: true 
         },
         rating: { 
-            type: Number, 
-            min: 1, 
+            type: mongoose.Schema.Types.ObjectId, ref: 'Rating',
+            min: 0, 
             max: 5, 
-            required: true 
+            default: 0
         },
         review: { 
             type: String, 

@@ -4,6 +4,7 @@ import Footer from '../components/Footer';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import { NestedMenu } from '../components/MenuComponent';
+import { Search } from '../components/SearchComponent';
 
 const FoodListingPage = () => {
   const [foodItems, setFoodItems] = useState([]);
@@ -14,13 +15,13 @@ const FoodListingPage = () => {
     // Fetch data from the API:
     const fetchFoodListings = async () => {
       try {
-        const response =  await axios.get('http://localhost:3000/api/listings/FoodListings', {withCredentials: true});
+        const response = await axios.get('http://localhost:3000/api/listings/FoodListings', { withCredentials: true });
         const data = response.data
-        
+
         if (response.status != 200) {
           throw new Error(`Error: ${response.statusText}`);
         }
-        
+
         setFoodItems(data.allFoodItems); // Assuming `data.data.newFood` contains the array
       } catch (err) {
         setError(err.message);
@@ -42,34 +43,29 @@ const FoodListingPage = () => {
 
   return (
     <div>
-      <nav className="bg-transparent px-2 text-white fixed w-full top-0 z-10 flex justify-between items-center">
+      <nav className="bg-transparent sm:flex-row py-2 px-2 text-white  w-full top-0 z-10 flex flex-col justify-between items-center">
         {/* Logo */}
-        <div className="text-2xl font-bold">
-          <Link to="/" className="text-headingCol hover:text-headingColHover no-underline">
+        <div className="text-xl font-bold">
+          <Link to="/food-listings" className="text-headingCol sm:text-2xl hover:text-headingColHover no-underline">
             FoodDonation
           </Link>
         </div>
-
-        {/* Request Donation Button */}
-        <div>
-          {/* <Link 
-            to="/requests" 
-            className="bg-white no-underline text-green-400 font-semibold px-4 py-2 rounded-lg shadow-md hover:bg-[#e3f7ff] hover:text-green-600 transition"
-          >
-            Requess
-          </Link> */}
-        <NestedMenu title={"Menu"} 
-        m1={"All Listings"} 
-        m3={"Profile"} 
-        mn1={"Profile Picture"} 
-        mn2={"Update Password"} 
-        mn3={"Log Out"}
-        m4={"Requests"}/>
+        <div className='w-full sm:w-1/2 flex justify-center'>
+          <Search />
         </div>
-        
+        <div>
+          <NestedMenu title={"Menu"}
+            m1={"All Listings"}
+            m3={"Profile"}
+            mn1={"Profile Picture"}
+            mn2={"Update Password"}
+            mn3={"Log Out"}
+            m4={"Requests"} />
+        </div>
+
       </nav>
 
-      <h1 className="text-3xl pt-20 font-bold text-center mt-6">FOOD LISTINGS!</h1>
+      <h1 className="text-3xl font-bold text-center mt-14 text-headingCol">FOOD LISTINGS!</h1>
       <FoodGrid foodItems={foodItems} />
       <Footer />
     </div>
