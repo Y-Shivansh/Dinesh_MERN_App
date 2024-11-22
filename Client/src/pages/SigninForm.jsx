@@ -16,7 +16,7 @@ export const Signin = () => {
     const [loading, setLoading] = useState(false);
 
     return (
-        <div className="min-h-screen bg-[#e0f5fd] flex flex-col justify-center items-center px-4">
+        <div className="min-h-screen bg-primaryCol flex flex-col justify-center items-center px-4">
             <div className="w-96 max-w-md text-center p-6 bg-gray-100 rounded-xl shadow-lg">
                 <Heading label={"Sign in"} />
                 <SubHeading label={"Enter your login credentials"} />

@@ -50,7 +50,7 @@ export const VerificationForm = () => {
     };
 
     return (
-        <div className="h-screen bg-[#e0f5fd] flex flex-col items-center justify-center">
+        <div className="h-screen bg-primaryCol flex flex-col items-center justify-center">
             <div className="w-96 text-center p-8 bg-gray-100 rounded-xl shadow-lg">
                 <h2 className="text-xl font-bold">Verify OTP</h2>
                 <p className="text-gray-600 mb-4">Enter the OTP sent to your email</p>

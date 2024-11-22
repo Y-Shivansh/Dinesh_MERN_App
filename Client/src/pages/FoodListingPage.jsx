@@ -38,7 +38,7 @@ const FoodListingPage = () => {
 
   return (
     <div>
-      <nav className="bg-[#00baf2] p-4 text-white shadow-md fixed w-full top-0 z-10 flex justify-between items-center">
+      <nav className="bg-primaryColHover p-4 text-white shadow-md fixed w-full top-0 z-10 flex justify-between items-center">
         {/* Logo */}
         <div className="text-2xl font-bold">
           <Link to="/" className="text-white hover:text-[#44d3ff] no-underline">

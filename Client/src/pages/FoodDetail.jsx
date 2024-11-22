@@ -56,7 +56,7 @@ const FoodDetail = () => {
   }
 
   return (
-    <div className="flex items-center justify-center h-[100vh] w-[100vw] bg-[#00baf2] rounded-lg shadow-lg">
+    <div className="flex items-center justify-center h-[100vh] w-[100vw] bg-secondaryCol rounded-lg shadow-lg">
       <div className="flex flex-col md:flex-row items-center justify-between">
         {/* Food Image */}
         <div className="flex-shrink-0 mb-6 md:mb-0 md:w-1/2">

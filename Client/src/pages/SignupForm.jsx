@@ -15,7 +15,7 @@ export const Signup = () => {
     const [error,setError] = useState("")
     const [loading, setLoading] = useState(false);
     return (
-        <div className="h-screen bg-[#e0f5fd] flex flex-col items-center">
+        <div className="h-screen bg-primaryCol flex flex-col items-center">
             <div className="w-96 mt-20 text-center p-8 bg-gray-100 rounded-xl shadow-lg">
                 <Heading label={"Sign up"} />
                 <SubHeading label={"Enter your signup credentials"} />

@@ -36,7 +36,7 @@ function Carousel() {
     }, []);
 
     return (
-        <div id="services" className="bg-blue-399 overflow-hidden relative w-full border-t-[.5px] border-slate-600 sm:opacity-95 box-border" data-carousel="static">
+        <div id="services" className="bg-blue-399 overflow-hidden relative w-full border-t-[.3px] border-slate-300 sm:opacity-95 box-border" data-carousel="static">
             {/* Title */}
             <div className="px-3 flex flex-col items-center justify-center">
                 <div className="text-gray-300 sm:text-[2.5rem] text-[1.8rem] my-5 uppercase font-wallpoet">What's on deck?</div>

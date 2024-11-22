@@ -43,7 +43,7 @@ export const ResetForm = () => {
 
     }
     return (
-        <div className="h-screen bg-[#e0f5fd] flex flex-col items-center justify-center">
+        <div className="h-screen bg-primaryCol flex flex-col items-center justify-center">
             <div className="w-96 text-center p-8 bg-gray-100 rounded-xl shadow-lg">
                 <h2 className="text-2xl font-bold">Verify Email</h2>
                 <div className="my-4">

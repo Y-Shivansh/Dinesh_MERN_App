@@ -1,31 +1,30 @@
-// components/Navbar.jsx
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import { Link as ScrollLink } from "react-scroll";
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-  // Toggle menu visibility on small screens
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
 
   return (
-    <nav className="bg-[#00baf2] p-4 text-white shadow-md fixed w-full top-0 z-10">
-      <div className="container mx-auto flex justify-between items-center">
+    <nav className="bg-primaryCol p-1 text-heading static w-full top-0 z-10">
+      <div className="px-3 py-1 flex justify-between items-center">
         {/* Logo Section */}
-        <div className="text-2xl font-bold">
-          <Link to="/" className="text-white hover:text-[#44d3ff] no-underline">
+        <div className="text-2xl font-semibold">
+          <Link
+            to="/"
+            className="text-heading text-headingCol hover:text-headingColHover no-underline"
+          >
             FoodDonation
           </Link>
         </div>
 
         {/* Hamburger Menu Icon (for small screens) */}
         <div className="block lg:hidden">
-          <button
-            onClick={toggleMenu}
-            className="text-white focus:outline-none"
-          >
+          <button onClick={toggleMenu} className="text-white focus:outline-none">
             <svg
               className="w-6 h-6"
               fill="none"
@@ -44,41 +43,50 @@ const Navbar = () => {
         </div>
 
         {/* Navigation Links (for large screens) */}
-        <ul className="pt-2 hidden lg:flex space-x-6">
+        <ul className="hidden lg:flex space-x-6">
           <li>
-            <Link to="/" className="text-white hover:text-[#44d3ff] no-underline">
+            <ScrollLink
+              to="home"
+              smooth={true}
+              duration={500}
+              className="text-headingCol hover:text-headingColHover cursor-pointer"
+            >
               Home
-            </Link>
+            </ScrollLink>
           </li>
           <li>
-            <Link
-              to="/about-us"
-              className="text-white hover:text-[#44d3ff] no-underline"
+            <ScrollLink
+              to="about"
+              smooth={true}
+              duration={500}
+              className="text-headingCol hover:text-headingColHover cursor-pointer"
             >
               About Us
-            </Link>
+            </ScrollLink>
           </li>
           <li>
-            <Link
-              to="/contact-us"
-              className="text-white hover:text-[#44d3ff] no-underline"
+            <ScrollLink
+              to="contact"
+              smooth={true}
+              duration={500}
+              className="text-headingCol hover:text-headingColHover cursor-pointer"
             >
               Contact Us
-            </Link>
+            </ScrollLink>
           </li>
         </ul>
 
         {/* Sign In and Sign Up (for large screens) */}
-        <div className="hidden lg:flex space-x-4">
+        <div className="hidden lg:flex space-x-4 justify-center items-center">
           <Link
             to="/sign-in"
-            className="mr-4 px-3 py-2 bg-[#e0f5fd] text-black rounded hover:bg-[#a9d8f1] no-underline"
+            className="mr-2 py-2 px-3 text-center bg-secondaryCol text-white rounded hover:bg-secondaryColHover no-underline"
           >
             Sign In
           </Link>
           <Link
             to="/sign-up"
-            className="px-3 py-2 bg-[#e0f5fd] text-black rounded hover:bg-[#a9d8f1] no-underline"
+            className="py-2 px-3 bg-secondaryCol text-white rounded hover:bg-secondaryColHover no-underline"
           >
             Sign Up
           </Link>
@@ -91,31 +99,37 @@ const Navbar = () => {
       >
         <ul>
           <li className="py-2">
-            <Link
-              to="/"
-              className="block text-white hover:text-[#44d3ff] no-underline"
+            <ScrollLink
+              to="home"
+              smooth={true}
+              duration={500}
+              className="block text-white hover:text-secondaryColHover cursor-pointer"
               onClick={toggleMenu}
             >
               Home
-            </Link>
+            </ScrollLink>
           </li>
           <li className="py-2">
-            <Link
-              to="/about-us"
-              className="block text-white hover:text-[#44d3ff] no-underline"
+            <ScrollLink
+              to="about"
+              smooth={true}
+              duration={500}
+              className="block text-white hover:text-secondaryColHover cursor-pointer"
               onClick={toggleMenu}
             >
               About Us
-            </Link>
+            </ScrollLink>
           </li>
           <li className="py-2">
-            <Link
-              to="/contact-us"
-              className="block text-white hover:text-[#44d3ff] no-underline"
+            <ScrollLink
+              to="contact"
+              smooth={true}
+              duration={500}
+              className="block text-white hover:text-[#44d3ff] cursor-pointer"
               onClick={toggleMenu}
             >
               Contact Us
-            </Link>
+            </ScrollLink>
           </li>
 
           {/* Sign In and Sign Up in Mobile Menu */}
@@ -144,5 +158,3 @@ const Navbar = () => {
 };
 
 export default Navbar;
-
-
