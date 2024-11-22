@@ -2,6 +2,7 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { Signin } from './pages/SigninForm';
 import { Signup } from './pages/SignupForm';
 import FoodDetail from './pages/FoodDetail';
+import Profile from './pages/Profile';
 import { PrivateRoute } from './components/PrivateRoute';
 import { VerificationForm } from './pages/VerificationForm';
 import { ResetForm } from './pages/ResetForm';
@@ -23,6 +24,7 @@ function App() {
           <Route path="/reset-password-verification" element={<ResetFormVerification />} />
           <Route path="/food-listings" element={<FoodListingPage />} /> {/* Add FoodListingPage route */}
           <Route path="/food-detail/:id" element={<FoodDetail />} />
+          <Route path="/profile" element={<Profile />} />
           <Route path="/profile/update-password" element={<UpdatePassword />} />
           {/* Uncomment if you want to use private routes
           <Route path='/dashboard' element={

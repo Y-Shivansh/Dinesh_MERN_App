@@ -4,37 +4,30 @@ import { useParams } from 'react-router-dom';
 import { toast, ToastContainer } from 'react-toastify'; // Import toast
 import 'react-toastify/dist/ReactToastify.css'; // Import styles
 
-const viewProfileHandler = () => {
-  toast.success('Viewing profile...');
-};
-
 const FoodDetail = () => {
   const { id } = useParams();
   const [foodItem, setFoodItem] = useState(null);
   const [userRatings, setUserRatings] = useState([]);
-  const [showOverlay, setShowOverlay] = useState(false); // State to manage overlay visibility
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [showProfileOverlay, setShowProfileOverlay] = useState(false); // State for profile overlay
+  const [showRequestOverlay, setShowRequestOverlay] = useState(false); // State for request overlay
 
   useEffect(() => {
     const fetchFoodItem = async () => {
       try {
         const response = await axios.get(`http://localhost:3000/api/listings/FoodListings/${id}`, { withCredentials: true });
         const data = response.data;
-        // console.log(data.foodItem);
-        
         if (response.status === 200) {
           setFoodItem(data.foodItem);
-          toast.success('Food item loaded successfully!'); // Show toast on successful data load
+          toast.success('Food item loaded successfully!');
         } else {
           setFoodItem(null);
         }
-
       } catch (error) {
         console.error('Error fetching food item:', error);
         setFoodItem(null);
-        toast.error('Food item not found!'); // Show toast if there's an error
-
+        toast.error('Food item not found!');
       } finally {
         setLoading(false);
       }
@@ -43,26 +36,34 @@ const FoodDetail = () => {
     fetchFoodItem();
   }, [id]);
 
-  useEffect(() => {
-    const fetchRatings = async () => {
-      try {
-        const response = await axios.get(`http://localhost:3000/api/ratings/user-rating/${foodItem.postedBy}`, { withCredentials: true });
-        console.log(response.data);
-        setUserRatings(response.data);
-      } catch (error) {
-        console.error('Error fetching ratings:', error);
-        setError('Failed to load ratings');
-        toast.error('Failed to load ratings'); // Show toast on error fetching ratings
+  // Request to donation Route
+  const handleConfirmRequest = async () => {
+    try {
+      const requestBody = {
+          foodListing: foodItem._id,   // ID of the food listing
+          // requestedBy: userId,        //Send by user ==>backend req.user.userId
+      };
+      console.log(requestBody);
+      
+      
+      const response = await axios.post(
+          'http://localhost:3000/api/user/donate/donations', 
+          requestBody, 
+          { withCredentials: true } 
+      );
+
+      console.log('Donation request successful:', response.data);
+  } catch (error) {
+      if (error.response) {
+          console.error('Error response:', error.response.data);
+          alert(error.response.data.error || 'Something went wrong while submitting the request.');
+      } else {
+          console.error('Error:', error.message);
+          alert('Unable to process the request. Please try again later.');
       }
-    };
-
-    if (foodItem) {
-      fetchRatings();
-    }
-  }, [foodItem]);
-
-  const toggleOverlay = () => {
-    setShowOverlay(!showOverlay); // Toggle overlay visibility
+  }finally{
+    setShowRequestOverlay(false);
+  }
   };
 
   if (loading) {
@@ -74,12 +75,16 @@ const FoodDetail = () => {
   }
 
   return (
-    <div className=" flex items-center justify-center h-screen w-screen bg-primaryColHover rounded-lg shadow-lg p-4">
-      <div className='my-4'>
+    <div className="flex items-center justify-center h-screen w-screen bg-primaryColHover rounded-lg shadow-lg p-4">
+      <div className="my-4">
         <div className="flex flex-col md:flex-row items-center justify-between w-full max-w-screen-lg mx-auto">
           {/* Food Image */}
           <div className="flex-shrink-0 mb-6 md:mb-0 md:w-1/2 w-full">
-            <img src={foodItem.photos[0] || 'https://via.placeholder.com/300'} alt={foodItem.title} className="w-full h-96 object-cover rounded-xl shadow-lg hover:scale-105 transition-transform duration-300" />
+            <img
+              src={foodItem.photos[0] || 'https://via.placeholder.com/300'}
+              alt={foodItem.title}
+              className="w-full h-96 object-cover rounded-xl shadow-lg hover:scale-105 transition-transform duration-300"
+            />
           </div>
 
           {/* Food Details */}
@@ -88,18 +93,29 @@ const FoodDetail = () => {
               <h2 className="text-3xl font-bold leading-tight mb-4">{foodItem.title}</h2>
               <p className="text-lg font-light text-headingColHover mb-4">{foodItem.description}</p>
               <div className="space-y-2">
-                <p className="text-lg font-medium">Category: <span className="font-light">{foodItem.category}</span></p>
-                <p className="text-lg font-medium">Quantity: <span className="font-light">{foodItem.quantity}</span></p>
-                <p className="text-lg font-medium">Expires on: <span className="font-light">{new Date(foodItem.expirationDate).toLocaleDateString()}</span></p>
-                <p className="text-lg font-medium">Location: <span className="font-light">{foodItem.location.address}</span></p>
+                <p className="text-lg font-medium">
+                  Category: <span className="font-light">{foodItem.category}</span>
+                </p>
+                <p className="text-lg font-medium">
+                  Quantity: <span className="font-light">{foodItem.quantity}</span>
+                </p>
+                <p className="text-lg font-medium">
+                  Expires on: <span className="font-light">{new Date(foodItem.expirationDate).toLocaleDateString()}</span>
+                </p>
+                <p className="text-lg font-medium">
+                  Location: <span className="font-light">{foodItem.location.address}</span>
+                </p>
               </div>
             </div>
             <div className="flex space-x-2 w-full">
-              <div className="bg-gray-500 hover:bg-gray-600 text-white rounded-md py-2 px-6 w-full md:w-auto cursor-pointer transition-all duration-200 transform text-center">
+              <div
+                onClick={() => setShowRequestOverlay(true)}
+                className="bg-gray-500 hover:bg-gray-600 text-white rounded-md py-2 px-6 w-full md:w-auto cursor-pointer transition-all duration-200 transform text-center"
+              >
                 Request
               </div>
               <div
-                onClick={() => { toggleOverlay(); viewProfileHandler(); }}
+                onClick={() => setShowProfileOverlay(true)}
                 className="bg-green-500 hover:bg-green-600 text-white rounded-md py-2 px-6 w-full md:w-auto cursor-pointer transition-all duration-200 transform text-center"
               >
                 View Profile
@@ -107,31 +123,28 @@ const FoodDetail = () => {
             </div>
           </div>
         </div>
-        {/* Overlay for User Ratings */}
-        {showOverlay && (
-          <div className="absolute inset-0 flex justify-center items-center bg-black bg-opacity-50 transition-opacity duration-300 opacity-100">
-            <div className="bg-white p-8 rounded-2xl shadow-lg w-full max-w-4xl">
-              <h2 className="text-2xl font-semibold mb-4 text-center text-primaryCol">User Ratings</h2>
-              <div className="space-y-3">
-                {userRatings.length === 0 ? (
-                  <p className="text-center text-lg text-gray-500">No ratings yet</p>
-                ) : (
-                  userRatings.map((rating) => (
-                    <div key={rating._id} className="flex flex-col p-4 rounded-lg shadow-sm border border-gray-200">
-                      <p className="font-medium">{rating.ratedBy.username}</p>
-                      <p className="text-sm text-gray-600">{rating.comment}</p>
-                      <p className="text-sm text-gray-500">Rating: {rating.rating}</p>
-                    </div>
-                  ))
-                )}
-              </div>
-              <div className="flex justify-center mt-4">
-                <div
-                  onClick={() => setShowOverlay(false)}
-                  className="bg-red-500 hover:bg-red-600 text-white rounded-md py-2 px-4 cursor-pointer transition-all duration-200 transform"
+
+        {/* Request Overlay */}
+        {showRequestOverlay && (
+          <div className="absolute inset-0 flex justify-center items-center bg-black bg-opacity-50">
+            <div className="bg-white p-8 rounded-2xl shadow-lg w-full max-w-4xl text-center">
+              <h2 className="text-2xl font-semibold mb-4 text-green-600">Request Confirmation</h2>
+              <p className="text-lg text-gray-700">
+                Are you sure you want to request this food item? Please confirm your action.
+              </p>
+              <div className="flex justify-center mt-6 space-x-4">
+                <button
+                  onClick={handleConfirmRequest} 
+                  className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-6 rounded-md transition-all duration-200"
                 >
-                  Close
-                </div>
+                  Confirm
+                </button>
+                <button
+                  onClick={() => setShowRequestOverlay(false)}
+                  className="bg-red-500 hover:bg-red-600 text-white py-2 px-6 rounded-md transition-all duration-200"
+                >
+                  Cancel
+                </button>
               </div>
             </div>
           </div>
@@ -139,7 +152,6 @@ const FoodDetail = () => {
 
         {/* Toast Container */}
         <ToastContainer position="top-right" autoClose={500} hideProgressBar newestOnTop closeButton />
-
       </div>
     </div>
   );

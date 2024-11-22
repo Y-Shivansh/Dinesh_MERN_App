@@ -30,15 +30,19 @@ const userSchema = new mongoose.Schema({
     }, 
     reviews: [
         {
-            reviewer: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
-            comment: String,
-            rating: Number,
+        reviewer: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+        comment: String,
+        rating: Number,
         },
     ],
     rating: {
         type: Number,
         default: 0,
     },
+    // ratingNo: {
+    //     type: Number,
+    //     default: 0
+    // },
     //Cloudinary 
      emailVerified: { 
         type: Boolean, 

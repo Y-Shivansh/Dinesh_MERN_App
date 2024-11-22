@@ -72,7 +72,7 @@ const FoodListingPage = () => {
                 className="w-10 h-10 rounded-full object-cover border border-gray-300"/>}
             m1={"All Listings"}
             m3={"Profile"}
-            mn1={"Profile Picture"}
+            mn1={"Profile"}
             mn2={"Update Password"}
             mn3={"Log Out"}
             m4={"Requests"} />

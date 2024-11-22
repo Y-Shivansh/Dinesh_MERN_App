@@ -41,7 +41,10 @@ export const changeStatusAccepted = async (req, res) => {
 
 export const requestDonation=async(req,res)=>{
     try{
-        const {foodListing,requestedBy}=req.body;
+        const {foodListing}= req.body;
+        const requestedBy = req.user.userId;
+
+        
         if(!foodListing||!requestedBy){
             return res.status(400).json({error:'foodListing and requestedBy are required'});
         }
@@ -58,7 +61,7 @@ export const requestDonation=async(req,res)=>{
     }
     catch(error){
         console.error("Donation error occured",error);
-        res.status(500).json({error:"Internal Server Errior"})
+        res.status(500).json({error:"Internal Server Error"})
     }
 };
 
@@ -87,18 +90,18 @@ export const markDonationCompleted = async (req, res) => {
     }
 };
 
-
 export const getDonationDetails = async (req, res) => {
     try {
-        const { id } = req.params;
+        
+        const id = req.user.userId;
 
-        const donation = await Donate.findById(id)
+        const donation = await Donate.find({ acceptedBy: id })
             .populate("foodListing")
-            .populate("requestedBy")
-            .populate("acceptedBy");
+            .populate("requestedBy") 
+            .populate("acceptedBy"); 
 
-        if (!donation) {
-            return res.status(404).json({ error: "Donation not found." });
+        if (!donation || donation.length === 0) {
+            return res.status(404).json({ error: "No donations found for this user." });
         }
 
         res.status(200).json({ donation });
@@ -107,6 +110,8 @@ export const getDonationDetails = async (req, res) => {
         res.status(500).json({ error: "Internal Server Error" });
     }
 };
+
+
 export const changeStatusScheduled = async(req,res)=>{
     try {
         const {scheduledPickup } = req.body;

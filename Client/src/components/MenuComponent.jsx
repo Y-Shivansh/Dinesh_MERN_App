@@ -18,8 +18,8 @@ export function NestedMenu({ title, m1, m2, m3, mn1, mn2, mn3, m4 }) {
     try {
       const response = await axios.post("http://localhost:3000/api/user/logout", {}, { withCredentials: true });
       if (response.status === 200) {
-        location.reload()
         navigate("/");
+        location.reload()
       } else {
         console.error("Logout failed:", response.data);
       }
@@ -61,7 +61,7 @@ export function NestedMenu({ title, m1, m2, m3, mn1, mn2, mn3, m4 }) {
             </MenuItem>
           </MenuHandler>
           <MenuList className="py-2">
-            <MenuItem onClick={() => navigate("/profile/picture")}>
+            <MenuItem onClick={() => navigate("/profile")}>
               {mn1}
             </MenuItem>
             <MenuItem onClick={() => navigate("/profile/update-password")}>

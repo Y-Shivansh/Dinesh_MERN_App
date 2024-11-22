@@ -56,14 +56,16 @@ router.put("/update-password",[
 
 router.get("/profile", authMiddleware, async (req, res) => {
     try {
-        const userId =req.params.id||req.user.userId;
+        const userId =req.user.userId;
         // console.log(userId);
         
         const user = await User.findById(userId);
+        // console.log(user);
+        
         if (!user) return res.status(404).json({ message: "User not found" });
         // console.log(user);
         
-        res.json(user);
+        res.status(200).json(user);
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: "Server error" });
@@ -71,16 +73,16 @@ router.get("/profile", authMiddleware, async (req, res) => {
 });
 
 
-router.put("/profile/:id", authMiddleware, async (req, res) => {
+router.put("/profile", authMiddleware, async (req, res) => {
     try {
-        if (req.user.userId !== req.params.id) {
-            return res.status(403).json({ message: "Not authorized" });
-        }
+        // if (req.user.userId !== req.params.id) {
+        //     return res.status(403).json({ message: "Not authorized" });
+        // }
 
         const { password, ...updateData } = req.body;
         // console.log(req.body);
         
-        const updatedUser = await User.findByIdAndUpdate(req.params.id, updateData, {
+        const updatedUser = await User.findByIdAndUpdate(req.user.userId, updateData, {
             new: true, 
             runValidators: true,
         });
@@ -100,9 +102,9 @@ router.put("/profile/:id", authMiddleware, async (req, res) => {
 
 //delete
 
-router.delete("/profile/:id", authMiddleware, async (req, res) => {
+router.delete("/profile", authMiddleware, async (req, res) => {
     try {
-        if (req.user.id !== req.params.id && req.user.role !== "admin") {
+        if (req.user.id && req.user.role !== "admin") {
             return res.status(403).json({ message: "Not authorized" });
         }
 

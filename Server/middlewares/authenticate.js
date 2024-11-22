@@ -2,10 +2,14 @@ import jwt from 'jsonwebtoken';
 import { SECRET_KEY } from '../config/config.js';
 
 export const authMiddleware = async(req,res,next) => {
+    
     try{
+        // console.log("helo");
         const {token} = req.cookies ;
         // const token = req.cookies.token || req.headers.authorization?.split(" ")[1];
         // console.log(token);
+        // console.log(req.cookies);
+        
         
         if (!token) {
             return res.status(401).json({ message: 'Unauthorized: No token provided' });
