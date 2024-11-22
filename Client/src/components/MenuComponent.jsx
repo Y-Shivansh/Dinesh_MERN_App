@@ -11,9 +11,7 @@ import {
   Button,
 } from "@material-tailwind/react";
 
-
-
-export function NestedMenu({title, m1,m2, m3, mn1,mn2,mn3,m4}) {
+export function NestedMenu({ title, m1, m2, m3, mn1, mn2, mn3, m4 }) {
   const navigate = useNavigate();
   const [openMenu, setOpenMenu] = React.useState(false);
   const handleLogout = async () => {
@@ -30,14 +28,19 @@ export function NestedMenu({title, m1,m2, m3, mn1,mn2,mn3,m4}) {
     }
   };
 
+ 
+
   return (
-    <Menu className="">
+    <Menu>
       <MenuHandler>
-        <Button className="text-headingCol shadow-none bg-transparent font-light"> {title} ▼</Button>
+        <Button className="text-headingCol shadow-none bg-transparent font-light">
+          {title} ▼
+        </Button>
       </MenuHandler>
       <MenuList>
-        <MenuItem >{m1}</MenuItem>
-        {/* <MenuItem>{m2}</MenuItem> */}
+        <MenuItem onClick={() => navigate("/all-listings")}>{m1}</MenuItem>
+        {/* <MenuItem onClick={() => navigate("/profile")}>{m2}</MenuItem> */}
+
         {/* Nested Menu */}
         <Menu
           placement="right-start"
@@ -58,13 +61,23 @@ export function NestedMenu({title, m1,m2, m3, mn1,mn2,mn3,m4}) {
             </MenuItem>
           </MenuHandler>
           <MenuList className="py-2">
-            <MenuItem>{mn1}</MenuItem>
-            <MenuItem>{mn2}</MenuItem>
-            <MenuItem className="border-t-[0.5px] py-2 underline" onClick={handleLogout}>{mn3}</MenuItem>
+            <MenuItem onClick={() => navigate("/profile/picture")}>
+              {mn1}
+            </MenuItem>
+            <MenuItem onClick={() => navigate("/profile/update-password")}>
+              {mn2}
+            </MenuItem>
+            <MenuItem
+              className="border-t-[0.5px] py-2 underline"
+              onClick={handleLogout}
+            >
+              {mn3}
+            </MenuItem>
           </MenuList>
         </Menu>
-        <MenuItem>{m4}</MenuItem>
+        <MenuItem onClick={() => navigate("/requests")}>{m4}</MenuItem>
       </MenuList>
     </Menu>
   );
 }
+

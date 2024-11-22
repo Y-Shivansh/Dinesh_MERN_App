@@ -8,6 +8,7 @@ import { ResetForm } from './pages/ResetForm';
 import { ResetFormVerification } from './pages/ResetFormVerificationForm';
 import Landing from './pages/Landing';
 import FoodListingPage from './pages/FoodListingPage'; // Import the FoodListingPage component
+import UpdatePassword from './pages/UpdatePassword';
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
           <Route path="/reset-password-verification" element={<ResetFormVerification />} />
           <Route path="/food-listings" element={<FoodListingPage />} /> {/* Add FoodListingPage route */}
           <Route path="/food-detail/:id" element={<FoodDetail />} />
+          <Route path="/profile/update-password" element={<UpdatePassword />} />
           {/* Uncomment if you want to use private routes
           <Route path='/dashboard' element={
             <PrivateRoute>

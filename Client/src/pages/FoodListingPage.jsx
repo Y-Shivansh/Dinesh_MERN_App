@@ -1,10 +1,18 @@
-import React, { useEffect, useState } from 'react';
-import FoodGrid from '../components/FoodGrid';
-import Footer from '../components/Footer';
-import { Link } from 'react-router-dom';
-import axios from 'axios';
-import { NestedMenu } from '../components/MenuComponent';
-import { Search } from '../components/SearchComponent';
+import React, { useEffect, useState } from "react";
+import FoodGrid from "../components/FoodGrid";
+import Footer from "../components/Footer";
+import { Link } from "react-router-dom";
+import axios from "axios";
+import { NestedMenu } from "../components/MenuComponent";
+import { Search } from "../components/SearchComponent";
+
+// Loader Component
+const Loader = () => <div className="text-center mt-6">Loading...</div>;
+
+// Error Display Component
+const ErrorDisplay = ({ message }) => (
+  <div className="text-center mt-6 text-red-600">Error: {message}</div>
+);
 
 const FoodListingPage = () => {
   const [foodItems, setFoodItems] = useState([]);
@@ -24,7 +32,7 @@ const FoodListingPage = () => {
 
         setFoodItems(data.allFoodItems); // Assuming `data.data.newFood` contains the array
       } catch (err) {
-        setError(err.message);
+        setError(err.message || "Something went wrong while fetching food items.");
       } finally {
         setLoading(false);
       }
@@ -34,11 +42,11 @@ const FoodListingPage = () => {
   }, []);
 
   if (loading) {
-    return <div className="text-center mt-6">Loading...</div>;
+    return <Loader />;
   }
 
   if (error) {
-    return <div className="text-center mt-6 text-red-600">Error: {error}</div>;
+    return <ErrorDisplay message={error} />;
   }
 
   return (
