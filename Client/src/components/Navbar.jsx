@@ -2,6 +2,7 @@ import React, { useState,useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Link as ScrollLink } from "react-scroll";
 import axios from "axios";
+import { NestedMenu } from "./MenuComponent";
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -14,11 +15,9 @@ const Navbar = () => {
     const fetchUserProfile = async () => {
       
       try {
-        // Make a GET request to your profile route, which will be authenticated using the token from cookies
-        const res = await axios.get("http://localhost:3000/api/user/profile", { withCredentials: true }); // withCredentials sends cookies with request
-        console.log("hello");
-        setUser(res.data);  // Set the user profile in state
-        console.log(res.data);
+        const res = await axios.get("http://localhost:3000/api/user/profile", { withCredentials: true });
+        setUser(res.data);
+        // console.log(res.data);
         
       } catch (error) {
         console.error("Error fetching user profile", error);
@@ -43,9 +42,9 @@ const Navbar = () => {
 
         {/* Hamburger Menu Icon (for small screens) */}
         <div className="block lg:hidden">
-          <button onClick={toggleMenu} className="text-white focus:outline-none">
+          <button onClick={toggleMenu} className="text-headingCol focus:outline-none">
             <svg
-              className="w-6 h-6"
+              className="w-8 h-8"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -68,7 +67,7 @@ const Navbar = () => {
               to="home"
               smooth={true}
               duration={500}
-              className="text-headingCol hover:text-headingColHover cursor-pointer"
+              className="text-headingCol hover:text-headingColHover cursor-pointer no-underline"
             >
               Home
             </ScrollLink>
@@ -78,7 +77,7 @@ const Navbar = () => {
               to="about"
               smooth={true}
               duration={500}
-              className="text-headingCol hover:text-headingColHover cursor-pointer"
+              className="text-headingCol hover:text-headingColHover cursor-pointer no-underline"
             >
               About Us
             </ScrollLink>
@@ -88,7 +87,7 @@ const Navbar = () => {
               to="contact"
               smooth={true}
               duration={500}
-              className="text-headingCol hover:text-headingColHover cursor-pointer"
+              className="text-headingCol hover:text-headingColHover cursor-pointer no-underline"
             >
               Contact Us
             </ScrollLink>
@@ -100,12 +99,21 @@ const Navbar = () => {
           {user ? (
             // If the user is signed in, display their image and name
             <div className="flex items-center space-x-3">
-              <img
+              {/* <img
                 src={user.image}
                 alt={user.name}
                 className="w-8 h-8 rounded-full"
-              />
-              <span className="text-black">{user.name}</span>
+              /> */}
+              {/* <span className="text-black">{user.name}</span> */}
+              <NestedMenu title={<img src={user.profilePicture}
+                alt={user.name}
+                className="w-10 h-10 rounded-full object-cover border border-gray-300"/>}
+            m1={"All Listings"}
+            m3={"Profile"}
+            mn1={"Profile Picture"}
+            mn2={"Update Password"}
+            mn3={"Log Out"}
+            m4={"Requests"} />
             </div>
           ) : (
             // If no user is signed in, show Sign In and Sign Up links
@@ -129,7 +137,7 @@ const Navbar = () => {
 
       {/* Mobile Menu */}
       <div
-        className={`lg:hidden ${isMenuOpen ? "block" : "hidden"} bg-[#00baf2] text-white p-4`}
+        className={`lg:hidden ${isMenuOpen ? "block" : "hidden"} bg-gray-200 text-headingCol p-4`}
       >
         <ul>
           <li className="py-2">
@@ -137,7 +145,7 @@ const Navbar = () => {
               to="home"
               smooth={true}
               duration={500}
-              className="block text-white hover:text-secondaryColHover cursor-pointer"
+              className="block text-headingCol hover:text-secondaryColHover cursor-pointer no-underline"
               onClick={toggleMenu}
             >
               Home
@@ -148,7 +156,7 @@ const Navbar = () => {
               to="about"
               smooth={true}
               duration={500}
-              className="block text-white hover:text-secondaryColHover cursor-pointer"
+              className="block text-headingCol hover:text-secondaryColHover cursor-pointer no-underline"
               onClick={toggleMenu}
             >
               About Us
@@ -159,7 +167,7 @@ const Navbar = () => {
               to="contact"
               smooth={true}
               duration={500}
-              className="block text-white hover:text-secondaryColHover cursor-pointer"
+              className="block text-headingCol hover:text-secondaryColHover cursor-pointer no-underline"
               onClick={toggleMenu}
             >
               Contact Us
@@ -169,19 +177,22 @@ const Navbar = () => {
           {/* User Info or Auth Links in Mobile Menu */}
           {user ? (
             <li className="py-2 flex items-center space-x-3">
-              <img
-                src={user.profilePicture}
+              <NestedMenu title={<img src={user.profilePicture}
                 alt={user.name}
-                className="w-8 h-8 rounded-full"
-              />
-              <span >{user.name}</span>
+                className="w-10 h-10 rounded-full object-cover border border-gray-300"/>}
+            m1={"All Listings"}
+            m3={"Profile"}
+            mn1={"Profile Picture"}
+            mn2={"Update Password"}
+            mn3={"Log Out"}
+            m4={"Requests"} />
             </li>
           ) : (
             <>
               <li className="py-2">
                 <Link
                   to="/sign-in"
-                  className="block px-3 py-2 bg-[#e0f5fd] text-black rounded hover:bg-[#a9d8f1] no-underline"
+                  className="block px-3 py-2 bg-secondaryCol text-white rounded hover:bg-secondaryColHover no-underline"
                   onClick={toggleMenu}
                 >
                   Sign In
@@ -190,7 +201,7 @@ const Navbar = () => {
               <li className="py-2">
                 <Link
                   to="/sign-up"
-                  className="block px-3 py-2 bg-[#e0f5fd] text-black rounded hover:bg-[#a9d8f1] no-underline"
+                  className="block px-3 py-2 bg-secondaryCol text-white rounded hover:bg-secondaryColHover no-underline"
                   onClick={toggleMenu}
                 >
                   Sign Up

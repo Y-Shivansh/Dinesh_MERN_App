@@ -14,7 +14,7 @@ export const createRating = async (req, res) => {
         // Create a new rating
         const newRating = new Rating({ ratedBy, ratedFor, rating, review });
         await newRating.save();
-        
+
         res.status(201).json({ message: "Rating created successfully", rating: newRating });
     } catch (error) {
         res.status(500).json({ message: "Error creating rating", error });
@@ -24,26 +24,42 @@ export const createRating = async (req, res) => {
 // Get all ratings for a specific user
 export const getRatingsForUser = async (req, res) => {
     try {
-        const { userId } = req.params;
-        // console.log(userId);
-        
-        const ratings = await Rating.find();
-        // console.log(ratings);
-        
-        const user = await User.find({userId})
-        // console.log(user);
-        
+        const userId = req.user.userId;
 
-        if (!ratings) {
-            return res.status(403).json({ 
-                message: "No ratings found for this user" });
+        // Fetch the ratings for the user
+        const ratings = await Rating.find({ ratedFor: userId });
+
+        const user = await User.findById(userId); 
+
+        if (!ratings || ratings.length === 0) {
+            return res.status(404).json({
+                message: "No ratings found for this user",
+            });
         }
+        if (!user) {
+            return res.status(404).json({
+                message: "User not found",
+            });
+        }
+        const noOfRatings = ratings.length;
+        const totalRate = ratings.reduce((sum, rate) => sum + rate.rating, 0) / noOfRatings;
+
+        // Update the user's rating
+        user.rating = totalRate;
+        await user.save(); 
+
         return res.status(200).json({
             user,
-            ratings
-        })
+            ratings,
+            noOfRatings,
+            totalRate,
+        });
     } catch (error) {
-        res.status(500).json({ message: "Error fetching ratings", error });
+        console.error(error);
+        res.status(500).json({
+            message: "Error fetching ratings",
+            error,
+        });
     }
 };
 
@@ -52,10 +68,11 @@ export const getRatingsByUser = async (req, res) => {
     try {
         const { userId } = req.params;
         const ratings = await Rating.find({ ratedBy: userId }).populate("ratedFor", "username");
-    
+
         if (!ratings) {
-            return res.status(403).json({ 
-                message: "No ratings found for this user" });
+            return res.status(403).json({
+                message: "No ratings found for this user"
+            });
         }
         return res.status(200).json({
             ratings

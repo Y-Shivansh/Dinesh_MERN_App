@@ -8,15 +8,15 @@ const router = express.Router();
 router.post("/", createRating);
 
 // Route to get all ratings for a specific user
-router.get("/user-rating/:userId", authMiddleware,getRatingsForUser);
+router.get("/user-rating", authMiddleware,getRatingsForUser);
 
 // Route to get all ratings given by a specific user
-router.get("/ratedBy/:userId", authMiddleware,getRatingsByUser);
+router.get("/ratedBy", authMiddleware,getRatingsByUser);
 
 // Route to update a rating by its ID
-router.put("/:ratingId",authMiddleware, updateRating);
+router.put("/update/:ratingId",authMiddleware, updateRating);
 
 // Route to delete a rating by its ID
-router.delete("/:ratingId", authMiddleware, deleteRating);
+router.delete("/delete/:ratingId", authMiddleware, deleteRating);
 
 export default router;

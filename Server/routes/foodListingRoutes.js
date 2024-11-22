@@ -1,11 +1,12 @@
 import express from "express";
-import { getAllFoodListings,getFilteredFoodListings, getFoodListingById, createFoodListing, updateFoodListing, deleteFoodListing } from "../controllers/foodListingController.js";
+import { getAllFoodListings,getFilteredFoodListings, getSearchedFoodListings,getFoodListingById, createFoodListing, updateFoodListing, deleteFoodListing } from "../controllers/foodListingController.js";
 import { authMiddleware } from "../middlewares/authenticate.js";
 import { upload } from "../middlewares/multer.js"; 
 
 const router = express.Router();
 
 router.get("/FoodListings", authMiddleware,getAllFoodListings);
+router.get("/FoodSearched-Listings/:filter", authMiddleware,getSearchedFoodListings);
 router.get("/FoodListings/:id",authMiddleware, getFoodListingById);
 router.put("/FoodListings/:id",authMiddleware,updateFoodListing);
 router.delete("/FoodListings/:id",authMiddleware, deleteFoodListing);

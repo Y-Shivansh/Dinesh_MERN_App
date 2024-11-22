@@ -6,7 +6,7 @@ const FoodGrid = ({ foodItems }) => {
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 p-4">
       {foodItems.map((foodItem) => (
         <div
-          key={foodItem._id}
+          key={foodItem._id }
           className="bg-white rounded-lg shadow-lg p-4 transform transition duration-300 hover:scale-105 hover:shadow-xl ease-in-out"
         >
           <Link to={`/food-detail/${foodItem._id}`} className="block no-underline">

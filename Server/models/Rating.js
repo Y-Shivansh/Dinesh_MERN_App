@@ -3,13 +3,14 @@ import mongoose from "mongoose";
 const ratingSchema = new mongoose.Schema(
     {
         ratedBy: { 
-            type: mongoose.Schema.Types.ObjectId, 
+            type: mongoose.Schema.Types.ObjectId,
             ref: "User", 
             required: true 
         },
+
         ratedFor: { 
             type: mongoose.Schema.Types.ObjectId, 
-            ref: "FoodListing", 
+            ref: "User", 
             required: true 
         },
         rating: { 

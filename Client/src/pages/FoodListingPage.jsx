@@ -18,19 +18,22 @@ const FoodListingPage = () => {
   const [foodItems, setFoodItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-
+  const [lists, setLists] = useState([]);
+  const [user, setUser] = useState(null); 
+  
   useEffect(() => {
     // Fetch data from the API:
     const fetchFoodListings = async () => {
       try {
         const response = await axios.get('http://localhost:3000/api/listings/FoodListings', { withCredentials: true });
         const data = response.data
-
         if (response.status != 200) {
           throw new Error(`Error: ${response.statusText}`);
         }
+        const res = await axios.get("http://localhost:3000/api/user/profile", { withCredentials: true });
+        setUser(res.data);
 
-        setFoodItems(data.allFoodItems); // Assuming `data.data.newFood` contains the array
+        setFoodItems(data.allFoodItems); 
       } catch (err) {
         setError(err.message || "Something went wrong while fetching food items.");
       } finally {
@@ -41,6 +44,8 @@ const FoodListingPage = () => {
     fetchFoodListings();
   }, []);
 
+  const renderFoodItems = lists.length > 0 ? lists : foodItems;
+  
   if (loading) {
     return <Loader />;
   }
@@ -59,10 +64,12 @@ const FoodListingPage = () => {
           </Link>
         </div>
         <div className='w-full sm:w-1/2 flex justify-center'>
-          <Search />
+          <Search setLists={setLists}/>
         </div>
         <div>
-          <NestedMenu title={"Menu"}
+          <NestedMenu title={<img src={user.profilePicture}
+                alt={user.name}
+                className="w-10 h-10 rounded-full object-cover border border-gray-300"/>}
             m1={"All Listings"}
             m3={"Profile"}
             mn1={"Profile Picture"}
@@ -74,7 +81,7 @@ const FoodListingPage = () => {
       </nav>
 
       <h1 className="text-3xl font-bold text-center mt-14 text-headingCol">FOOD LISTINGS!</h1>
-      <FoodGrid foodItems={foodItems} />
+      <FoodGrid foodItems={renderFoodItems} />
       <Footer />
     </div>
   );

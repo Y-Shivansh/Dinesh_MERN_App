@@ -4,10 +4,10 @@ import { authMiddleware } from "../middlewares/authenticate.js";
 
 const router = express.Router();
 
-router.post('/donations',requestDonation);
+router.post('/donations',authMiddleware,requestDonation);
 // router.patch('/donations/:id' ,authMiddleware, changeStatus);
-router.put("/donations/:id/complete",  markDonationCompleted);
-router.get("/donations/:id", getDonationDetails);
+router.put("/donations/:id/complete",  authMiddleware,markDonationCompleted);
+router.get("/donations/:id",authMiddleware, getDonationDetails);
 router.patch('/donations/:id' ,authMiddleware, changeStatusAccepted);
 router.patch('/donations/:id/schedule',authMiddleware, changeStatusScheduled);
 

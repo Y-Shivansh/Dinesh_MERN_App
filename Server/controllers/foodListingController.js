@@ -167,7 +167,7 @@ export const getAllFoodListings = async (req, res) => {
         }
         // console.log(user);
         // console.log(allFoodItems);
-        
+
         // console.log(allFoodItems);
 
         res.status(200).json({
@@ -182,6 +182,51 @@ export const getAllFoodListings = async (req, res) => {
         });
     }
 }
+export const getSearchedFoodListings = async (req, res) => {
+    const filter = req.params.filter || "";
+
+    try {
+        // Wait for the query result
+        const lists = await FoodListing.find({
+            $or: [{
+                category: {
+                    $regex: filter,
+                    $options: 'i' // Making case-insensitive
+                }
+            }]
+        });
+
+        // If no listings found, return this
+        if (!lists || lists.length === 0) {
+            return res.status(404).json({
+                success: false,
+                message: "No listings found"
+            });
+        }
+
+        return res.json({
+            list: lists.map(list => ({
+                _id: list.id,
+                title: list.title,
+                description: list.description,
+                category: list.category,
+                quantity: list.quantity,
+                expirationDate: list.expirationDate,
+                location: list.location,
+                photos: list.photos,
+                postedBy: list.postedBy,
+                isModerated: list.isModerated
+            }))
+        });
+
+    } catch (error) {
+        console.error("Error fetching listings:", error);
+        return res.status(500).json({
+            success: false,
+            message: "Server error"
+        });
+    }
+};
 
 
 export const getFilteredFoodListings = async (req, res) => {
@@ -217,7 +262,7 @@ export const getFoodListingById = async (req, res) => {
                 message: 'Food item not found',
             });
         }
-        res.status(200).json({foodItem});
+        res.status(200).json({ foodItem });
     } catch (err) {
 
         console.log(err);

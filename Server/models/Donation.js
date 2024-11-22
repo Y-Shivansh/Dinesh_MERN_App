@@ -15,7 +15,8 @@ const donationSchema = new mongoose.Schema(
         acceptedBy: { 
             type: mongoose.Schema.Types.ObjectId, 
             ref: "User" 
-        }, //donor
+        },
+        //donor
 
         status: {
             type: String,
