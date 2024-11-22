@@ -1,13 +1,32 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Link as ScrollLink } from "react-scroll";
+import axios from "axios";
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
+  
+  const [user, setUser] = useState(null); 
+  useEffect(() => {
+    const fetchUserProfile = async () => {
+      
+      try {
+        // Make a GET request to your profile route, which will be authenticated using the token from cookies
+        const res = await axios.get("http://localhost:3000/api/user/profile", { withCredentials: true }); // withCredentials sends cookies with request
+        console.log("hello");
+        setUser(res.data);  // Set the user profile in state
+        console.log(res.data);
+        
+      } catch (error) {
+        console.error("Error fetching user profile", error);
+      }
+    };
+
+    fetchUserProfile();
+  }, []);
 
   return (
     <nav className="bg-primaryCol p-1 text-heading static w-full top-0 z-10">
@@ -76,20 +95,35 @@ const Navbar = () => {
           </li>
         </ul>
 
-        {/* Sign In and Sign Up (for large screens) */}
+        {/* User Info or Auth Links */}
         <div className="hidden lg:flex space-x-4 justify-center items-center">
-          <Link
-            to="/sign-in"
-            className="mr-2 py-2 px-3 text-center bg-secondaryCol text-white rounded hover:bg-secondaryColHover no-underline"
-          >
-            Sign In
-          </Link>
-          <Link
-            to="/sign-up"
-            className="py-2 px-3 bg-secondaryCol text-white rounded hover:bg-secondaryColHover no-underline"
-          >
-            Sign Up
-          </Link>
+          {user ? (
+            // If the user is signed in, display their image and name
+            <div className="flex items-center space-x-3">
+              <img
+                src={user.image}
+                alt={user.name}
+                className="w-8 h-8 rounded-full"
+              />
+              <span className="text-black">{user.name}</span>
+            </div>
+          ) : (
+            // If no user is signed in, show Sign In and Sign Up links
+            <>
+              <Link
+                to="/sign-in"
+                className="mr-2 py-2 px-3 text-center bg-secondaryCol text-white rounded hover:bg-secondaryColHover no-underline"
+              >
+                Sign In
+              </Link>
+              <Link
+                to="/sign-up"
+                className="py-2 px-3 bg-secondaryCol text-white rounded hover:bg-secondaryColHover no-underline"
+              >
+                Sign Up
+              </Link>
+            </>
+          )}
         </div>
       </div>
 
@@ -125,32 +159,45 @@ const Navbar = () => {
               to="contact"
               smooth={true}
               duration={500}
-              className="block text-white hover:text-[#44d3ff] cursor-pointer"
+              className="block text-white hover:text-secondaryColHover cursor-pointer"
               onClick={toggleMenu}
             >
               Contact Us
             </ScrollLink>
           </li>
 
-          {/* Sign In and Sign Up in Mobile Menu */}
-          <li className="py-2">
-            <Link
-              to="/sign-in"
-              className="block px-3 py-2 bg-[#e0f5fd] text-black rounded hover:bg-[#a9d8f1] no-underline"
-              onClick={toggleMenu}
-            >
-              Sign In
-            </Link>
-          </li>
-          <li className="py-2">
-            <Link
-              to="/sign-up"
-              className="block px-3 py-2 bg-[#e0f5fd] text-black rounded hover:bg-[#a9d8f1] no-underline"
-              onClick={toggleMenu}
-            >
-              Sign Up
-            </Link>
-          </li>
+          {/* User Info or Auth Links in Mobile Menu */}
+          {user ? (
+            <li className="py-2 flex items-center space-x-3">
+              <img
+                src={user.profilePicture}
+                alt={user.name}
+                className="w-8 h-8 rounded-full"
+              />
+              <span >{user.name}</span>
+            </li>
+          ) : (
+            <>
+              <li className="py-2">
+                <Link
+                  to="/sign-in"
+                  className="block px-3 py-2 bg-[#e0f5fd] text-black rounded hover:bg-[#a9d8f1] no-underline"
+                  onClick={toggleMenu}
+                >
+                  Sign In
+                </Link>
+              </li>
+              <li className="py-2">
+                <Link
+                  to="/sign-up"
+                  className="block px-3 py-2 bg-[#e0f5fd] text-black rounded hover:bg-[#a9d8f1] no-underline"
+                  onClick={toggleMenu}
+                >
+                  Sign Up
+                </Link>
+              </li>
+            </>
+          )}
         </ul>
       </div>
     </nav>

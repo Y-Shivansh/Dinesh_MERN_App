@@ -54,10 +54,15 @@ router.put("/update-password",[
 ], authMiddleware, updatePassword );
 
 
-router.get("/profile/:id", authMiddleware, async (req, res) => {
+router.get("/profile", authMiddleware, async (req, res) => {
     try {
-        const user = await User.findById(req.params.id);
+        const userId =req.params.id||req.user.userId;
+        // console.log(userId);
+        
+        const user = await User.findById(userId);
         if (!user) return res.status(404).json({ message: "User not found" });
+        // console.log(user);
+        
         res.json(user);
     } catch (error) {
         console.error(error);
@@ -75,7 +80,6 @@ router.put("/profile/:id", authMiddleware, async (req, res) => {
         const { password, ...updateData } = req.body;
         // console.log(req.body);
         
-
         const updatedUser = await User.findByIdAndUpdate(req.params.id, updateData, {
             new: true, 
             runValidators: true,

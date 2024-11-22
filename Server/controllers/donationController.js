@@ -63,7 +63,7 @@ export const requestDonation=async(req,res)=>{
 };
 
 export const markDonationCompleted = async (req, res) => {
-    console.log("hello");
+    // console.log("hello");
     
     try {
         const { id } = req.params;

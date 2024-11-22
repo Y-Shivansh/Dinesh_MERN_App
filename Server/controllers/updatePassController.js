@@ -13,12 +13,12 @@ export const updatePassword = async (req, res) => {
         // console.log("HELLO" , userId);
         
         const { newPassword, oldPassword } = req.body;
-
-        // Fetch user using userId from middleware
-        const user = await User.findById(userId);
-        // console.log(user);
+        
+        const user = await User.findById(req.user.userId);
+        // console.log(req.user);
         
         if (!user) {
+            
             return res.status(404).json({ message: "User not found" });
         }
         // Compare old password with the current hashed password

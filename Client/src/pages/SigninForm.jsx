@@ -3,7 +3,7 @@ import { Button } from "../components/Button"
 import { Heading } from "../components/Heading"
 import { InputBox } from "../components/inputBox"
 import { SubHeading } from "../components/SubHeading"
-import { useState } from "react"
+import { useState,useEffect } from "react"
 import { useNavigate } from "react-router-dom";
 import axios from 'axios'
 import { Loading } from "../components/Loading"
@@ -14,6 +14,26 @@ export const Signin = () => {
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(false);
+
+    const [user, setUser] = useState(null); 
+
+    useEffect(() => {
+        // Check if the user is already logged in
+        const fetchUserProfile = async () => {
+            try {
+                const res = await axios.get("http://localhost:3000/api/user/profile", { withCredentials: true });
+                setUser(res.data);  // Set the user profile in state
+                if (res.data) {
+                    navigate("/food-listings");  // Redirect to food-listings if the user is logged in
+                }
+            } catch (error) {
+                console.error("Error fetching user profile", error);
+            }
+        };
+
+        fetchUserProfile();
+    }, [navigate]);
+  
 
     return (
         <div className="min-h-screen bg-primaryCol flex flex-col justify-center items-center px-4">

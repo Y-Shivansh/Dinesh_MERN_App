@@ -15,7 +15,7 @@ export const authMiddleware = async(req,res,next) => {
                 res.status(403).json({message: "Forbidden: Invalid Token"})
             }
             
-            req.user = decoded.userId;
+            req.user = decoded;
             // console.log(req.user);
             
             next();

@@ -1,9 +1,10 @@
-import React, { useRef } from "react";
+import React, { useRef ,useState, useEffect} from "react";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import image from "/assets/food-donation-image.jpg";
 import Carousel from "../components/Carousel";
 import { Link } from "react-router-dom";
+
 
 const Landing = () => {
   const homeRef = useRef(null);
@@ -13,10 +14,14 @@ const Landing = () => {
   const scrollToSection = (ref) => {
     ref.current.scrollIntoView({ behavior: "smooth" });
   };
-
+  // const user = {
+  //   name: "John Doe",
+  //   image: "https://res.cloudinary.com/dn6fyhicj/image/upload/v1732257919/ql6gqomfjqygrghkpdzy.webp",
+  // };
+ 
   return (
     <div>
-      <Navbar
+      <Navbar 
         onHomeClick={() => scrollToSection(homeRef)}
         onAboutClick={() => scrollToSection(aboutRef)}
         onContactClick={() => scrollToSection(contactRef)}
@@ -33,6 +38,7 @@ const Landing = () => {
           <p className="text-paraText mt-4 text-lg max-w-xl mx-auto md:mx-0">
             Empowering communities through donations. Your small contribution can create a big impact. Join us in making a difference!
           </p>
+          
           <Link to="/sign-in">
             <button className="mt-6 px-6 py-2 bg-secondaryCol text-white rounded hover:bg-secondaryColHover">
               Get Started
