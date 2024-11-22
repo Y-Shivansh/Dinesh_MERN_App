@@ -58,7 +58,13 @@ const FoodListingPage = () => {
           >
             Requess
           </Link> */}
-        <NestedMenu title={"Menu"} m1={"All Listings"} m3={"Profile"} mn1={"Profile Picture"} mn2={"Update Password"} mn3={"Log Out"} m4={"Requests"}/>
+        <NestedMenu title={"Menu"} 
+        m1={"All Listings"} 
+        m3={"Profile"} 
+        mn1={"Profile Picture"} 
+        mn2={"Update Password"} 
+        mn3={"Log Out"}
+        m4={"Requests"}/>
         </div>
         
       </nav>

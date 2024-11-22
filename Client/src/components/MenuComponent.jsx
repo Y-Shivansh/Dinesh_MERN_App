@@ -1,5 +1,7 @@
 import React from "react";
 import { ChevronUpIcon } from "@heroicons/react/24/solid";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 import {
   Menu,
@@ -9,7 +11,22 @@ import {
   Button,
 } from "@material-tailwind/react";
 
+const handleLogout = async () => {
+  try {
+    const response = await axios.post("http://localhost:3000/api/user/logout", {}, { withCredentials: true });
+
+    if (response.status === 200) {
+      navigate("/");
+    } else {
+      console.error("Logout failed:", response.data);
+    }
+  } catch (error) {
+    console.error("Error during logout:", error.message);
+  }
+};
+
 export function NestedMenu({title, m1,m2, m3, mn1,mn2,mn3,m4}) {
+  const navigate = useNavigate();
   const [openMenu, setOpenMenu] = React.useState(false);
 
   return (
@@ -18,7 +35,7 @@ export function NestedMenu({title, m1,m2, m3, mn1,mn2,mn3,m4}) {
         <Button className="text-headingCol shadow-none bg-transparent font-light"> {title} ▼</Button>
       </MenuHandler>
       <MenuList>
-        <MenuItem>{m1}</MenuItem>
+        <MenuItem >{m1}</MenuItem>
         <MenuItem>{m2}</MenuItem>
         {/* Nested Menu */}
         <Menu
@@ -42,7 +59,7 @@ export function NestedMenu({title, m1,m2, m3, mn1,mn2,mn3,m4}) {
           <MenuList className="py-2">
             <MenuItem>{mn1}</MenuItem>
             <MenuItem>{mn2}</MenuItem>
-            <MenuItem className="border-t-[0.5px] py-2 underline" >{mn3}</MenuItem>
+            <MenuItem className="border-t-[0.5px] py-2 underline" onClick={handleLogout}>{mn3}</MenuItem>
           </MenuList>
         </Menu>
         <MenuItem>{m4}</MenuItem>
