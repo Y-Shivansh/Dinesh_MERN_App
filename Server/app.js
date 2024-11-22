@@ -14,16 +14,16 @@ import { loginAdmin } from "./controllers/loginAdmin.js";
 // import auth from './routes/userRoutes';
 const app = express();
 const corsOptions = {
-    origin: 'http://localhost:5173' || 'http://localhost:3000', // frontend origin
+    origin: 'http://localhost:5173',// frontend origin
     credentials: true, // Allowing cookies and other credentials
-    allowedHeaders: ['Content-Type', 'Authorization'],
+    // allowedHeaders: ['Content-Type', 'Authorization'],
 };
 
+app.use(cookieParser())
 app.use(helmet());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(cors(corsOptions));
-app.use(cookieParser())
 
 // user routes
 app.use("/api/listings", foodListingRoutes);

@@ -22,28 +22,29 @@ export const verifyOtpController = async (req, res) => {
             return res.status(400).json({ message: 'Expired Otp' });
         }
         if (enteredOtp !== otp) {
-            
+
             return res.status(400).json({ message: "Invalid OTP" })
         }
         // if (enteredOtp === otp) {
-            console.log(otpRecord.password);
-            const hashedPassword = await bcrypt.hash(otpRecord.password, 10)
-            const newUser = await new User({
-                name: otpRecord.name,
-                email: otpRecord.email,
-                password: hashedPassword,
-                role: otpRecord.role,
-                emailVerified: true,
-            })
-            const token = generateToken(newUser._id);
-            res.cookie('token', token, {
-                httpOnly: true,
-                secure: true,
-                maxAge: 43200000
-            })
-            await newUser.save()
-            await Otp.deleteOne({ email });
-            res.status(201).json({ message: 'User registered successfully', token });
+        console.log(otpRecord.password);
+        const hashedPassword = await bcrypt.hash(otpRecord.password, 10)
+        const newUser = await new User({
+            name: otpRecord.name,
+            email: otpRecord.email,
+            password: hashedPassword,
+            role: otpRecord.role,
+            emailVerified: true,
+        })
+        const token = generateToken(newUser._id);
+        res.cookie('token', token, {
+            httpOnly: true,
+            secure: false, // true if using HTTPS
+            sameSite: 'Lax', // Use 'None' for cross-origin requests
+            maxAge: 12 * 60 * 60 * 1000, // 12 hours
+        })
+        await newUser.save()
+        await Otp.deleteOne({ email });
+        res.status(201).json({ message: 'User registered successfully', token });
         // }
         // res.status(400).json({ message: "exceptional error" })
     }

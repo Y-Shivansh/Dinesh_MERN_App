@@ -4,18 +4,19 @@ import { SECRET_KEY } from '../config/config.js';
 export const authMiddleware = async(req,res,next) => {
     try{
         const {token} = req.cookies ;
+        // const token = req.cookies.token || req.headers.authorization?.split(" ")[1];
         console.log(token);
-        
         
         if (!token) {
             return res.status(401).json({ message: 'Unauthorized: No token provided' });
         }
-        jwt.verify(token, SECRET_KEY, (err,user)=>{
+        const decoded = jwt.verify(token, SECRET_KEY, (err,user)=>{
             if(err){
                 res.status(403).json({message: "Forbidden: Invalid Token"})
             }
             
             req.user = user;
+            console.log(user)
             
             next();
         })
@@ -23,7 +24,6 @@ export const authMiddleware = async(req,res,next) => {
         // console.log(decoded);
         // req.user=decoded.userId;
         // req.locals.user=decoded.userId;
-        
     }
     catch(err){
         console.error(err);

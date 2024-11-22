@@ -41,7 +41,7 @@ export const ResetFormVerification = () => {
     try {
       const response = await axios.put(
         `http://localhost:3000/api/user/reset-password?email=${email}`,
-        { enteredOtp: numberOtp, newPassword: password }
+        { enteredOtp: numberOtp, newPassword: password },{withCredentials: true}
       );
 
       if (response.status === 201) {
@@ -63,7 +63,7 @@ export const ResetFormVerification = () => {
 
     try {
       // Resend OTP using the same endpoint for both generating and resending OTP
-      await axios.post("http://localhost:3000/api/user/reset-verification", { email });
+      await axios.post("http://localhost:3000/api/user/reset-verification", { email }, {withCredentials: true});
       alert("A new OTP has been sent to your email.");
     } catch (err) {
       setError(err.response?.data?.message || "Failed to resend OTP. Please try again.");

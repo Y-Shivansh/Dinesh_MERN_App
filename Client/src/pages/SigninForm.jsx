@@ -60,8 +60,9 @@ export const Signin = () => {
                                 try {
                                     const response = await axios.post(
                                         "http://localhost:3000/api/user/login",
-                                        { email, password }
-                                    );
+                                        { email, password }, // Request body
+                                        { withCredentials: true } // Axios configuration
+                                      );
                                     if (response.status === 200) {
                                         navigate("/food-listings");
                                     } else {

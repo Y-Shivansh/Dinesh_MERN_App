@@ -25,13 +25,14 @@ export const loginUser = async (req, res) => {
         const token = generateToken(user._id);
         console.log(token);
         res.cookie('token', token, {
-            httpOnly: false,
+            httpOnly: true,
             secure: false,  // Set to true if using HTTPS
-            sameSite: 'None',  // If cross-origin request
+            sameSite: 'lax',  // If cross-origin request
             maxAge: 43200000
         })
         res.status(200).json({
             message: "Login successful",
+            token,
             user: {
                 id: user._id,
                 name: user.name,

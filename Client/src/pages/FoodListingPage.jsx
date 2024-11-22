@@ -16,12 +16,12 @@ const FoodListingPage = () => {
       try {
         const response =  await axios.get('http://localhost:3000/api/listings/FoodListings', {withCredentials: true});
         const data = response.data
-        console.log(data.newFood);
         
         if (response.status != 200) {
           throw new Error(`Error: ${response.statusText}`);
         }
-        setFoodItems(data.newFood); // Assuming `data.data.newFood` contains the array
+        
+        setFoodItems(data.allFoodItems); // Assuming `data.data.newFood` contains the array
       } catch (err) {
         setError(err.message);
       } finally {

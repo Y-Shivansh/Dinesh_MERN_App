@@ -157,6 +157,31 @@ export const deleteFoodListing = async (req, res) => {
 
 export const getAllFoodListings = async (req, res) => {
     try {
+        const allFoodItems = await FoodListing.find();
+        if (!allFoodItems) {
+          return res.status(404).json({
+            status: 'fail',
+            message: 'Food item not found',
+          });
+        }
+        console.log(allFoodItems);
+        
+        res.status(200).json({
+            allFoodItems,
+        });
+      }catch (err) {
+        // Handle any errors
+        console.log(err);
+        res.status(400).json({
+          status: 'error',
+          message: 'Error fetching food item',
+        });
+      }
+}
+
+
+export const getFilteredFoodListings = async (req, res) => {
+    try {
         const features = new APIFeatures(FoodListing.find(), req.query)
             .filter()
             .sort()
