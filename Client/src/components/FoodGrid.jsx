@@ -10,9 +10,8 @@ const FoodGrid = ({ foodItems }) => {
           className="bg-white rounded-lg shadow-lg p-4 transform transition duration-300 hover:scale-105 hover:shadow-xl ease-in-out"
         >
           <Link to={`/food-detail/${foodItem._id}`} className="block no-underline">
-            {/* Handling photos as an array */}
             <img 
-              src={foodItem.photos[0]} 
+              src={foodItem.photo} 
               alt={foodItem.title} 
               className="w-full h-48 object-cover rounded-lg" 
             />

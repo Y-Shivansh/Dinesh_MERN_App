@@ -110,7 +110,7 @@ const FoodDetail = () => {
           {/* Food Image */}
           <div className="flex-shrink-0 mb-6 md:mb-0 md:w-1/2 w-full">
             <img
-              src={foodItem.photos[0] || 'https://via.placeholder.com/300'}
+              src={foodItem.photo || 'https://via.placeholder.com/300'}
               alt={foodItem.title}
               className="w-full h-96 object-cover rounded-xl shadow-lg hover:scale-105 transition-transform duration-300"
             />

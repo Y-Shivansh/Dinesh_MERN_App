@@ -14,27 +14,28 @@ router.delete("/FoodListings/:id",authMiddleware, deleteFoodListing);
 router.get("/FoodListings/Filtered", authMiddleware,getFilteredFoodListings);
 
 router.post(
-    "/FoodListings",
+    "/Create-FoodListings",
+    upload.single("photo"),
     authMiddleware,
-    upload.array("photos", 10), 
-    [
-      body('title').notEmpty().withMessage('title is required'),
-      body('description').notEmpty().withMessage('your food description'),
-      body('category').notEmpty().withMessage('your food category'),
-      body('quantity').notEmpty().withMessage('quantity is required').isNumeric().withMessage('quantity must be a number'),
-      body('expirationDate').notEmpty().withMessage('expirationDate is required').isISO8601().withMessage('expirationDate must be a valid ISO8601 date'),
-      body('location.address').notEmpty().withMessage('location address is required'),
-      body('location.coordinates').isArray({ min: 2, max: 2 }).withMessage('location coordinates must be an array with two numbers [longitude, latitude]')
-        .custom((value) => {
-          if (!Array.isArray(value) || value.some(isNaN)) {
-            throw new Error('location coordinates must contain only numbers');
-          }
-          return true;
-        }),
-      body('photos').optional(),
-      body('postedBy').notEmpty().withMessage('postedBy is required').isMongoId().withMessage('postedBy must be a valid MongoDB ObjectId'),
-      body('isModerated').optional().isBoolean().withMessage('isModerated must be a boolean'),
-    ],
+    // upload.array("photos", 10), 
+    // [
+    //   body('title').notEmpty().withMessage('title is required'),
+    //   body('description').notEmpty().withMessage('your food description'),
+    //   body('category').notEmpty().withMessage('your food category'),
+    //   body('quantity').notEmpty().withMessage('quantity is required').isNumeric().withMessage('quantity must be a number'),
+    //   body('expirationDate').notEmpty().withMessage('expirationDate is required').isISO8601().withMessage('expirationDate must be a valid ISO8601 date'),
+    //   body('location.address').notEmpty().withMessage('location address is required'),
+    //   body('location.coordinates').isArray({ min: 2, max: 2 }).withMessage('location coordinates must be an array with two numbers [longitude, latitude]')
+    //     .custom((value) => {
+    //       if (!Array.isArray(value) || value.some(isNaN)) {
+    //         throw new Error('location coordinates must contain only numbers');
+    //       }
+    //       return true;
+    //     }),
+    //   body('photos').optional(),
+    //   body('postedBy').notEmpty().withMessage('postedBy is required').isMongoId().withMessage('postedBy must be a valid MongoDB ObjectId'),
+    //   body('isModerated').optional().isBoolean().withMessage('isModerated must be a boolean'),
+    // ],
     createFoodListing
   );
   

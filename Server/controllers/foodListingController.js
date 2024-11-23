@@ -2,9 +2,17 @@ import APIFeatures from "../utils/APIFeatures.js";
 import { uploadOnCloudinary } from "../utils/Cloudinary.js";
 import FoodListing from "../models/FoodListing.js";
 import User from '../models/user.js'
+import { validationResult } from 'express-validator';
 
 export const createFoodListing = async (req, res) => {
     try {
+        // Validate the incoming request
+        // const errors = validationResult(req);
+        // if (!errors.isEmpty()) {
+        //     return res.status(400).json({ errors: errors.array() });
+        // }
+
+        // Destructure fields from the request body
         const {
             title,
             description,
@@ -12,54 +20,58 @@ export const createFoodListing = async (req, res) => {
             quantity,
             expirationDate,
             locationAddress,
-            // longitude,
-            // latitude, 
-            postedBy,
-        } = { ...req.body };
-        const { longitude, latitude } = req.body || {}
-        // console.log(location);
-        // console.log(req.body);
-        // console.log(req.files);
-        // console.log(title);
+            longitude,   // Ensure these are included in req.body
+            latitude,
+        } = req.body;
 
-        const photos = req.files ? req.files : [];
+        const userId = req.user.userId;
+        const postedBy = userId;
+        const photo = req.file;
 
-
-        if (!title || !description || !category || !quantity || !expirationDate || !locationAddress || longitude === undefined || latitude === undefined || !postedBy) {
-            // if (!title || !description || !category || !quantity || !expirationDate || !locationAddress || !longitude || !latitude  || !postedBy) {
-            return res.status(400).json({ error: "All required fields must be filled." });
-        }
+        // Parse and validate location
         const location = {
             address: locationAddress,
-            coordinates: [parseFloat(longitude), parseFloat(latitude)], // Parse as numbers
+            coordinates: [parseFloat(longitude), parseFloat(latitude)]
         };
+        console.log(location);
 
         if (
             isNaN(location.coordinates[0]) ||
             isNaN(location.coordinates[1]) ||
+            location.coordinates[0] === "" ||
+            location.coordinates[1] === "" ||
             location.coordinates.length !== 2
         ) {
             return res.status(400).json({ error: "Invalid coordinates provided." });
         }
 
-        const uploadedPhotos = [];
-        if (photos && photos.length > 0) {
-
-            for (const photo of photos) {
-                const uploadedImage = await uploadOnCloudinary(photo.path);
-
-                if (uploadedImage) {
-                    uploadedPhotos.push(uploadedImage.url);
-                }
+        // Upload the photo to Cloudinary (or any other service)
+        let uploadedPhoto = null;
+        if (photo) {
+            const uploadedImage = await uploadOnCloudinary(photo.path); // Adjust function for your service
+            if (uploadedImage) {
+                uploadedPhoto = uploadedImage.url; // Save the uploaded photo URL
             }
         }
+
+        // Parse and validate quantity and expiration date
         const parsedQuantity = parseInt(quantity, 10);
-        const parsedExpirationDate = new Date(expirationDate);
+        const parsedExpirationDate = (() => {
+            const [day, month, year] = expirationDate.split('-');
+            const isoFormattedDate = `${year}-${month}-${day}`;
+            const parsedDate = new Date(isoFormattedDate);
+
+            if (parsedDate.toString() === "Invalid Date") {
+                throw new Error("Invalid date format. Please use dd-mm-yyyy.");
+            }
+            return parsedDate;
+        })();
 
         if (isNaN(parsedQuantity) || parsedExpirationDate.toString() === "Invalid Date") {
             return res.status(400).json({ error: "Invalid quantity or expiration date." });
         }
 
+        // Create a new food listing
         const newListing = new FoodListing({
             title,
             description,
@@ -67,15 +79,22 @@ export const createFoodListing = async (req, res) => {
             quantity: parsedQuantity,
             expirationDate: parsedExpirationDate,
             location,
-            photos: uploadedPhotos,
+            photo: uploadedPhoto,
             postedBy,
         });
 
         await newListing.save();
 
-        const user = await User.findById(req.user._id);
+        // Update the user's food items
+        const user = await User.findById(postedBy);
+        if (!user) {
+            return res.status(404).json({ error: "User not found." });
+        }
+
         user.foodItems.push(newListing._id);
         await user.save();
+
+        // Respond with success
         res.status(201).json({
             message: "Food listing created successfully!",
             listing: newListing,
@@ -86,24 +105,23 @@ export const createFoodListing = async (req, res) => {
     }
 };
 
+
 export const updateFoodListing = async (req, res) => {
     try {
         const listingId = req.params.id;
         const updateData = req.body;
-        const photos = req.files ? req.files.photos : [];
-        const uploadedPhotos = [];
+        const photo = req.file ;
+        const uploadedPhoto = null;
 
-        if (photos && photos.length > 0) {
-            for (const photo of photos) {
+        if (photo) {
                 const uploadedImage = await uploadOnCloudinary(photo.path);
                 if (uploadedImage) {
-                    uploadedPhotos.push(uploadedImage.url);
-                }
+                    uploadedPhoto.push(uploadedImage.url);
             }
         }
 
-        if (uploadedPhotos.length > 0) {
-            updateData.photos = uploadedPhotos;
+        if (uploadedPhoto.length > 0) {
+            updateData.photo = uploadedPhoto;
         }
 
         const updatedListing = await FoodListing.findByIdAndUpdate(listingId, updateData, {
@@ -213,7 +231,7 @@ export const getSearchedFoodListings = async (req, res) => {
                 quantity: list.quantity,
                 expirationDate: list.expirationDate,
                 location: list.location,
-                photos: list.photos,
+                photo: list.photo,
                 postedBy: list.postedBy,
                 isModerated: list.isModerated
             }))

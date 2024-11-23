@@ -10,6 +10,7 @@ import { ResetFormVerification } from './pages/ResetFormVerificationForm';
 import Landing from './pages/Landing';
 import FoodListingPage from './pages/FoodListingPage';
 import UpdatePassword from './pages/UpdatePassword';
+import { DonateFood } from './components/DonateFood';
 
 function App() {
   return (
@@ -26,6 +27,7 @@ function App() {
           <Route path="/food-detail/:id" element={<FoodDetail />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/profile/update-password" element={<UpdatePassword />} />
+          <Route path='/donate-food' element={<DonateFood/>}/>
           {/* Uncomment if you want to use private routes
           <Route path='/dashboard' element={
             <PrivateRoute>

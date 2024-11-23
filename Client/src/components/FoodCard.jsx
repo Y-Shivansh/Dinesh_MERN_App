@@ -1,10 +1,10 @@
 import React from 'react';
 
-const FoodCard = ({ title, description, category, quantity, expirationDate, location, photos }) => {
+const FoodCard = ({ title, description, category, quantity, expirationDate, location, photo }) => {
   return (
     <div className="border rounded-lg shadow-md p-4 w-80">
       <img
-        src={photos[0]}
+        src={photo}
         alt={title}
         className="h-48 w-full object-cover rounded-t-lg mb-4"
       />
