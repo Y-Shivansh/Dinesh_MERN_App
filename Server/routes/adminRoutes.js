@@ -120,6 +120,8 @@ router.get('/handle-reports', verifyAdmin, async (req, res) => {
             .populate('reportedContent');  // listing that was reported
         res.status(200).json(reports);
     } catch (error) {
+        console.log(error);
+        
         res.status(500).json({ message: 'Error fetching reports', error });
     }
 });

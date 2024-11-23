@@ -11,7 +11,7 @@ import {
   Button,
 } from "@material-tailwind/react";
 
-export function NestedMenu({ title, m1, m2, m3, mn1, mn2, mn3, m4 }) {
+export function NestedMenu({ title, m1, m3, mn1, mn2, mn3, m4 }) {
   const navigate = useNavigate();
   const [openMenu, setOpenMenu] = React.useState(false);
   const handleLogout = async () => {
@@ -39,7 +39,7 @@ export function NestedMenu({ title, m1, m2, m3, mn1, mn2, mn3, m4 }) {
       </MenuHandler>
       <MenuList>
         <MenuItem onClick={() => navigate("/food-listings")}>{m1}</MenuItem>
-        {/* <MenuItem onClick={() => navigate("/profile")}>{m2}</MenuItem> */}
+        <MenuItem onClick={() => navigate("/")}>Donate Food</MenuItem>
 
         {/* Nested Menu */}
         <Menu

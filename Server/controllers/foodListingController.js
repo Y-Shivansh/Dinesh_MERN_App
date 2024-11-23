@@ -157,7 +157,7 @@ export const deleteFoodListing = async (req, res) => {
 
 export const getAllFoodListings = async (req, res) => {
     try {
-        const user = req.user?.userId;
+        const user = req.user.userId;
         const allFoodItems = await FoodListing.find();
         if (!allFoodItems) {
             return res.status(404).json({

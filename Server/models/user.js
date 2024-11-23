@@ -28,6 +28,9 @@ const userSchema = new mongoose.Schema({
         type: String, 
         default: "" 
     }, 
+    reports: [{
+        reportedContent: {type: mongoose.Schema.Types.ObjectId, ref: "Report"}
+    }],
     reviews: [
         {
         reviewer: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },

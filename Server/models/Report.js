@@ -13,7 +13,7 @@ const reportSchema = new mongoose.Schema(
         },
         reportedContent: { 
             type: mongoose.Schema.Types.ObjectId, 
-            ref: "Listing" 
+            ref: "FoodListing" 
         },
         reason: { 
             type: String, 
