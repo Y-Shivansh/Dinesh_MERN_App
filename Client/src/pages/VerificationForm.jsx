@@ -3,10 +3,12 @@ import { useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
 import { InputBox } from "../components/inputBox";
 import { Button } from "../components/Button";
+import { Loading } from "../components/Loading"
 
-export const SignupVerify = () => {
+export const VerificationForm = () => {
     const [otp, setOtp] = useState("");
     const [error, setError] = useState("");
+    const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
     const location = useLocation(); // Accessing email from query params
     const email = new URLSearchParams(location.search).get("email");
@@ -29,20 +31,26 @@ export const SignupVerify = () => {
                 { withCredentials: true } //for sending cookies
             );
 
-            if (response.status===201) {
-                navigate("/dashboard");
+            if (response.status === 201) {
+                navigate("/food-listings");
             } else {
-                console.log(response.data.message);
+                
                 setError(response.data.message);
             }
         } catch (err) {
-            console.log(err);
-            setError("Error verifying OTP");
+            if (err.response) {
+                
+                setError(err.response.data.message || "Error Occurred");
+            }
+            else {
+                
+                setError("Error verifying OTP");
+            }
         }
     };
 
     return (
-        <div className="h-screen bg-[#e0f5fd] flex flex-col items-center justify-center">
+        <div className="h-screen bg-primaryCol flex flex-col items-center justify-center">
             <div className="w-96 text-center p-8 bg-gray-100 rounded-xl shadow-lg">
                 <h2 className="text-xl font-bold">Verify OTP</h2>
                 <p className="text-gray-600 mb-4">Enter the OTP sent to your email</p>
@@ -54,6 +62,7 @@ export const SignupVerify = () => {
                     onChange={(e) => setOtp(e.target.value)}
                 />
                 {error && <p className="text-red-500 text-sm">{error}</p>}
+                {/* {Loading} */}
                 <Button label={"Verify OTP"} onClick={handleVerifyOtp} />
             </div>
         </div>

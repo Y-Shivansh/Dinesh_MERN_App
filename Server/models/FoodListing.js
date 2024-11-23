@@ -31,13 +31,21 @@ const foodListingSchema = new mongoose.Schema(
                 required: true,
             },
         },
-        photos: [{ type: String }], // Array of Cloudinary URL
+        photo: { type: String },
 
         postedBy: { 
             type: mongoose.Schema.Types.ObjectId, 
             ref: "User", 
             required: true 
         },
+        isModerated: { 
+            type: Boolean, 
+            default: false 
+        }, 
+        isReported: {
+            type: Boolean,
+            default: false
+        }
     },
     { timestamps: true }
 );

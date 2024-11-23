@@ -1,14 +1,15 @@
 import express from 'express';
 import { body, check, validationResult } from 'express-validator';
 import User from "../models/user.js";
-import { authenticate, isAdmin, authMiddleware } from "../middlewares/authenticate.js";
+import { isAdmin, authMiddleware } from "../middlewares/authenticate.js";
 import { registerUser } from '../controllers/registerController.js'
 import { loginUser } from '../controllers/loginController.js'
 import { verifyOtpController } from '../controllers/verifyOtpController.js';
 import { updatePassword } from '../controllers/updatePassController.js';
 import { resetVerification } from '../controllers/resetVerification.js';
 import { resetPassword } from '../controllers/resetPassword.js';
-
+import { uploadOnCloudinary } from "../utils/Cloudinary.js";
+import { upload } from "../middlewares/multer.js"; 
 const router = express.Router();
 
 router.post("/register", [
@@ -20,7 +21,6 @@ router.post("/register", [
     body('role').optional().isIn(['individual', 'business', 'charity']).withMessage('Invalid role'),
 ], registerUser);
 
-// Email in query (navigation)    /verify-otp?email=user@example.com
 router.post("/verify-otp", [
     body('enteredOtp').notEmpty().withMessage('OTP is required')
 ], verifyOtpController);
@@ -35,7 +35,7 @@ router.post("/login", [
 router.post('/logout', (req, res) => {
     res.clearCookie('token', {
         httpOnly: true,
-        secure: true,
+        secure: false,
         path: '/'
     });
     res.status(200).json({ message: 'Logged out successfully' });
@@ -55,11 +55,18 @@ router.put("/update-password",[
 ], authMiddleware, updatePassword );
 
 
-router.get("/profile/:id", authMiddleware, async (req, res) => {
+router.get("/profile", authMiddleware, async (req, res) => {
     try {
-        const user = await User.findById(req.params.id);
+        const userId =req.user.userId;
+        // 
+        
+        const user = await User.findById(userId);
+        // 
+        
         if (!user) return res.status(404).json({ message: "User not found" });
-        res.json(user);
+        // 
+        
+        res.status(200).json(user);
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: "Server error" });
@@ -67,17 +74,27 @@ router.get("/profile/:id", authMiddleware, async (req, res) => {
 });
 
 
-router.put("/profile/:id", authMiddleware, async (req, res) => {
+router.put("/profile", upload.single("profilePicture"), authMiddleware, async (req, res) => {
     try {
-        if (req.user.userId !== req.params.id) {
-            return res.status(403).json({ message: "Not authorized" });
-        }
-
+        // Remove the password field from the body if it exists (not updating password here)
         const { password, ...updateData } = req.body;
-        console.log(req.body);
+
+        // Get the uploaded photo (file)
+        const photo = req.file;
         
 
-        const updatedUser = await User.findByIdAndUpdate(req.params.id, updateData, {
+        // If there's a photo, upload it to Cloudinary
+        if (photo.path) {
+            const uploadedImage = await uploadOnCloudinary(photo.path); // Assuming you have this function
+            if (uploadedImage) {
+                updateData.profilePicture = uploadedImage.url; // Store the URL of the uploaded image
+            }
+        }
+
+        
+
+        // Update the user in the database
+        const updatedUser = await User.findByIdAndUpdate(req.user.userId, updateData, {
             new: true, 
             runValidators: true,
         });
@@ -86,6 +103,7 @@ router.put("/profile/:id", authMiddleware, async (req, res) => {
             return res.status(404).json({ message: "User not found" });
         }
 
+        // Respond with the updated user data
         res.json(updatedUser);
     } catch (error) {
         console.error("Error updating profile:", error.message);
@@ -95,11 +113,12 @@ router.put("/profile/:id", authMiddleware, async (req, res) => {
 
 
 
+
 //delete
 
-router.delete("/profile/:id", authenticate, async (req, res) => {
+router.delete("/profile", authMiddleware, async (req, res) => {
     try {
-        if (req.user.id !== req.params.id && req.user.role !== "admin") {
+        if (req.user.id && req.user.role !== "admin") {
             return res.status(403).json({ message: "Not authorized" });
         }
 
@@ -116,18 +135,17 @@ router.delete("/profile/:id", authenticate, async (req, res) => {
 
 
 
-router.get("/users", authenticate,isAdmin, async (req, res) => {
-    try {
-        const users = await User.find();
-        res.json(users);
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: "Server error" });
-    }
-});
+// router.get("/users", authenticate,isAdmin, async (req, res) => {
+//     try {
+//         const users = await User.find();
+//         res.json(users);
+//     } catch (error) {
+//         console.error(error);
+//         res.status(500).json({ message: "Server error" });
+//     }
+// });
 
-
-router.post("/profile/:id/reviews", authenticate, async (req, res) => {
+router.post("/profile/:id/reviews", authMiddleware, async (req, res) => {
     try {
         const { comment, rating } = req.body;
         const user = await User.findById(req.params.id);

@@ -3,6 +3,7 @@ import fs from 'fs';
 import mongoose from 'mongoose';
 import path from 'path'; // Import path module
 // import FoodListing from '../../models/foodListing.js';
+import Donation from '../../models/Donation.js'
 
 const envPath = '/Users/Shared/Files From f.localized/Web Devlopment/MERN_DIN/Dinesh_MERN_App/Server/dotenv.env';
 dotenv.config({ path: envPath });
@@ -15,7 +16,7 @@ if (!process.env.MONGODB_URI) {
 // Connect to MongoDB
 mongoose
   .connect(process.env.MONGODB_URI)
-  .then(() => console.log('DB connection successful!'))
+  .then(() => 
   .catch(err => {
     console.error('DB connection error:', err);
     process.exit(1);
@@ -25,7 +26,7 @@ mongoose
 const __dirname = path.dirname(new URL(import.meta.url).pathname);
 
 // Read the JSON file
-const filePath ='/Users/Shared/Files From f.localized/Web Devlopment/MERN_DIN/Dinesh_MERN_App/Server/dev-data/data/foodList.json';
+const filePath ='/Users/Shared/Files From f.localized/Web Devlopment/MERN_DIN/Dinesh_MERN_App/Server/dev-data/data/donation.json';
 
 if (!fs.existsSync(filePath)) {
   console.error(`Error: File not found at ${filePath}`);
@@ -37,8 +38,8 @@ const tours = JSON.parse(fs.readFileSync(filePath, 'utf-8'));
 // Import data into DB
 const importData = async () => {
   try {
-    await FoodListing.create(tours);
-    console.log('Data successfully loaded!');
+    await Donation.create(tours);
+    
   } catch (err) {
     console.error('Error importing data:', err);
   }
@@ -49,7 +50,7 @@ const importData = async () => {
 const deleteData = async () => {
   try {
     await FoodListing.deleteMany();
-    console.log('Data successfully deleted!');
+    
   } catch (err) {
     console.error('Error deleting data:', err);
   }
@@ -62,7 +63,7 @@ if (process.argv[2] === '--import') {
 } else if (process.argv[2] === '--delete') {
   deleteData();
 } else {
-  console.log('Invalid command. Use --import to import data or --delete to delete data.');
+  
   process.exit(1);
 }
 

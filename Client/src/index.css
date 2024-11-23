@@ -1,3 +1,46 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.carousel-slide-left {
+    animation: left 700ms ease forwards;
+}
+
+@keyframes left {
+    0% {
+        transform: translateX(10rem);
+    }
+    100% {
+        transform: translateX(0);
+    }
+}
+
+.floating-image {
+    animation: float 2s ease infinite;
+}
+
+@keyframes float {
+    0%, 100% {
+        transform: translateY(2px);
+    }
+    50% {
+        transform: translateY(-20px);
+    }
+}
+
+.hover-transition {
+    transition: box-shadow 0.3s ease, width 0.3s ease;
+}
+
+.hover-transition:hover {
+    box-shadow: 4px 8px 10px 0px rgba(0, 0, 0, 0.3);
+}
+
+.hidden-element {
+    @apply opacity-0 transform translate-y-12 transition-all duration-700;
+}
+
+.visible-element {
+    @apply opacity-100 transform translate-y-0;
+}
+

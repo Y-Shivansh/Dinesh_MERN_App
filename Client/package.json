@@ -10,16 +10,25 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@heroicons/react": "^2.2.0",
+    "@material-tailwind/react": "^2.1.10",
     "axios": "^1.7.7",
     "bootstrap": "^5.3.3",
     "fix": "^0.0.3",
+    "formik": "^2.4.6",
     "link": "^2.1.1",
+    "mdb-react-ui-kit": "^9.0.0",
     "postcss-cli": "^11.0.0",
     "react": "^18.2.0",
     "react-bootstrap": "^2.10.5",
     "react-dom": "^18.2.0",
+    "react-ratings-declarative": "^3.4.1",
     "react-router-dom": "^6.26.2",
-    "react-spinners": "^0.14.1"
+    "react-scroll": "^1.9.0",
+    "react-spinners": "^0.14.1",
+    "react-toastify": "^10.0.6",
+    "tw-elements-react": "^1.0.0-alpha-end",
+    "yup": "^1.4.0"
   },
   "devDependencies": {
     "@types/react": "^18.3.8",
