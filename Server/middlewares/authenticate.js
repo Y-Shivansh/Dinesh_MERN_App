@@ -24,10 +24,7 @@ export const authMiddleware = async(req,res,next) => {
             
             next();
         })
-        // const decoded=await promisify(jwt.verify)(token,SECRET_KEY);
-        // console.log(decoded);
-        // req.user=decoded.userId;
-        // req.locals.user=decoded.userId;
+
     }
     catch(err){
         console.error(err);

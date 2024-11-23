@@ -10,6 +10,7 @@ import Admin from '../models/Admin.js';
 const router = express.Router();
 
 // Manage Users
+
 // List all users
 router.get('/manage-users', verifyAdmin, async (req, res) => {
     try {
