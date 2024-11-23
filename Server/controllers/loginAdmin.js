@@ -18,9 +18,12 @@ export const loginAdmin = async (req, res) => {
         if (!isMatch) return res.status(400).json({ message: 'Invalid credentials' });
 
         const token = generateToken(admin._id)
+        console.log(token);
+        
         res.cookie('token', token, {
             httpOnly: true,
-            secure: true,
+            sameSite:"lax",
+            secure: false,
             maxAge: 43200000
         })
         res.status(200).json({
