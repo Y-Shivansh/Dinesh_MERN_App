@@ -8,7 +8,8 @@ import { verifyOtpController } from '../controllers/verifyOtpController.js';
 import { updatePassword } from '../controllers/updatePassController.js';
 import { resetVerification } from '../controllers/resetVerification.js';
 import { resetPassword } from '../controllers/resetPassword.js';
-
+import { uploadOnCloudinary } from "../utils/Cloudinary.js";
+import { upload } from "../middlewares/multer.js"; 
 const router = express.Router();
 
 router.post("/register", [
@@ -73,15 +74,26 @@ router.get("/profile", authMiddleware, async (req, res) => {
 });
 
 
-router.put("/profile", authMiddleware, async (req, res) => {
+router.put("/profile", authMiddleware, upload.single("photo"), async (req, res) => {
     try {
-        // if (req.user.userId !== req.params.id) {
-        //     return res.status(403).json({ message: "Not authorized" });
-        // }
-
+        // Remove the password field from the body if it exists (not updating password here)
         const { password, ...updateData } = req.body;
-        // console.log(req.body);
-        
+
+        // Get the uploaded photo (file)
+        const photo = req.file;
+        console.log(photo.path); // Logs the path of the uploaded file (in the temporary folder)
+
+        // If there's a photo, upload it to Cloudinary
+        if (photo.path) {
+            const uploadedImage = await uploadOnCloudinary(photo.path); // Assuming you have this function
+            if (uploadedImage) {
+                updateData.profilePicture = uploadedImage.url; // Store the URL of the uploaded image
+            }
+        }
+
+        console.log(updateData); // Log the data being sent to MongoDB for updating
+
+        // Update the user in the database
         const updatedUser = await User.findByIdAndUpdate(req.user.userId, updateData, {
             new: true, 
             runValidators: true,
@@ -91,12 +103,14 @@ router.put("/profile", authMiddleware, async (req, res) => {
             return res.status(404).json({ message: "User not found" });
         }
 
+        // Respond with the updated user data
         res.json(updatedUser);
     } catch (error) {
         console.error("Error updating profile:", error.message);
         res.status(500).json({ message: "Server error" });
     }
 });
+
 
 
 

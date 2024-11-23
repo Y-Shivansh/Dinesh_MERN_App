@@ -113,7 +113,8 @@ const Navbar = () => {
             mn1={"Profile Picture"}
             mn2={"Update Password"}
             mn3={"Log Out"}
-            m4={"Requests"} />
+            m4={"Requests"} 
+            m5={"Edit Your Details"}/>
             </div>
           ) : (
             // If no user is signed in, show Sign In and Sign Up links

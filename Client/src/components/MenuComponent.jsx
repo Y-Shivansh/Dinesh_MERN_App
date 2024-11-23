@@ -11,7 +11,7 @@ import {
   Button,
 } from "@material-tailwind/react";
 
-export function NestedMenu({ title, m1, m3, mn1, mn2, mn3, m4 }) {
+export function NestedMenu({ title, m1, m3, mn1, mn2, mn3, m4 ,m5}) {
   const navigate = useNavigate();
   const [openMenu, setOpenMenu] = React.useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false); // Add modal state
@@ -67,6 +67,8 @@ export function NestedMenu({ title, m1, m3, mn1, mn2, mn3, m4 }) {
             <MenuList className="py-2">
               <MenuItem onClick={() => navigate("/profile")}>{mn1}</MenuItem>
               <MenuItem onClick={() => navigate("/profile/update-password")}>{mn2}</MenuItem>
+              <MenuItem onClick={() => navigate("/updateMe")}>{m5}</MenuItem>
+
               <MenuItem
                 className="border-t-[0.5px] py-2 underline"
                 onClick={handleLogout}

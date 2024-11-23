@@ -11,6 +11,8 @@ import Landing from './pages/Landing';
 import FoodListingPage from './pages/FoodListingPage';
 import UpdatePassword from './pages/UpdatePassword';
 import { DonateFood } from './components/DonateFood';
+import ProfileUpdate from './components/ProfileUpdate';
+
 
 function App() {
   return (
@@ -28,6 +30,8 @@ function App() {
           <Route path="/profile" element={<Profile />} />
           <Route path="/profile/update-password" element={<UpdatePassword />} />
           <Route path='/donate-food' element={<DonateFood/>}/>
+          <Route path='/updateMe' element={<ProfileUpdate/>}/>
+
           {/* Uncomment if you want to use private routes
           <Route path='/dashboard' element={
             <PrivateRoute>

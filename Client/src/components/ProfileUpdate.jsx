@@ -47,7 +47,8 @@ const ProfileUpdate = () => {
       if (values.profilePicture) {
         formData.append('profilePicture', values.profilePicture);
       }
-
+      console.log(formData);
+      
       try {
         // console.log(formData);
         
