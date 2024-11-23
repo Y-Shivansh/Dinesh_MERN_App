@@ -12,5 +12,4 @@ router.get("/donations", getDonationDetails);
 router.patch('/donations/:id' ,authMiddleware, changeStatusAccepted);
 router.patch('/donations/:id/schedule',authMiddleware, changeStatusScheduled);
 
-
 export default router;

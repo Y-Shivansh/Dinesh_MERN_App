@@ -5,6 +5,8 @@ import { SECRET_KEY } from '../config/config.js';
 export const authenticateAdmin = async (req, res, next) => {
     try {
         const { token } = req.cookies;
+        // console.log("token: ",token);
+        
         if (!token) return res.status(403).json({ message: "Access denied. No token provided." });
         jwt.verify(token, SECRET_KEY, (err, decoded) => {
             if (err) {

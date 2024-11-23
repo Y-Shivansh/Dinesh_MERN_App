@@ -1,7 +1,7 @@
 import Admin from "../models/Admin.js";
 export const verifyAdmin = async(req, res, next) => {
     const adminId = req.admin.userId
-    console.log(adminId);
+    // console.log("verifyAdmin: ",adminId);
     const admin = await Admin.findById(adminId);
     if (admin && admin.role === 'admin') {
         console.log("Admin Verified");

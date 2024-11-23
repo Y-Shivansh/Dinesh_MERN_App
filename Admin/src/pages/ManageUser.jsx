@@ -5,24 +5,21 @@ const ManageUsers = () => {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [userToDelete, setUserToDelete] = useState(null);
 
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        console.log("Fetching users...");
         const response = await axios.get(
           "http://localhost:3000/api/super/admin/manage-users",
           { withCredentials: true }
         );
-        console.log("API Response:", response.data);
-
-        // Extract the users array from the response object
         const userData = Array.isArray(response.data.users) ? response.data.users : [];
         setUsers(userData);
-        setLoading(false);
       } catch (err) {
-        console.error(err);
-        setError("Failed to fetch users");
+        setError(err.response?.data?.message || "Failed to fetch users");
+      } finally {
         setLoading(false);
       }
     };
@@ -30,72 +27,126 @@ const ManageUsers = () => {
     fetchUsers();
   }, []);
 
-  if (loading) return <div>Loading...</div>;
-  if (error) return <div>{error}</div>;
+  const updateUserStatus = async (id, status) => {
+    try {
+      await axios.patch(
+        `http://localhost:3000/api/super/admin/manage-users/${id}`,
+        { status },
+        { withCredentials: true }
+      );
+      setUsers((prevUsers) =>
+        prevUsers.map((user) =>
+          user._id === id ? { ...user, status } : user
+        )
+      );
+    } catch (err) {
+      alert("Failed to update user status");
+    }
+  };
+
+  const deleteUser = async () => {
+    try {
+      if (userToDelete) {
+        await axios.delete(
+          `http://localhost:3000/api/super/admin/manage-users/${userToDelete._id}`,
+          { withCredentials: true }
+        );
+        setUsers((prevUsers) => prevUsers.filter((user) => user._id !== userToDelete._id));
+        setIsModalOpen(false); // Close modal after delete
+      }
+    } catch (err) {
+      alert("Failed to delete user");
+    }
+  };
+
+  const openModal = (user) => {
+    setUserToDelete(user);
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setUserToDelete(null);
+  };
+
+  if (loading) return <div className="text-center text-xl mt-4">Loading...</div>;
+  if (error) return <div className="text-center text-red-600">{error}</div>;
 
   return (
-    <div style={{ padding: "20px" }}>
-      <h1>Manage Users</h1>
-      <table
-        style={{
-          width: "100%",
-          borderCollapse: "collapse",
-          marginTop: "20px",
-        }}
-      >
-        <thead>
-          <tr>
-            <th style={thStyle}>Name</th>
-            <th style={thStyle}>Email</th>
-            <th style={thStyle}>Role</th>
-            <th style={thStyle}>Status</th>
-            <th style={thStyle}>Email Verified</th>
-            <th style={thStyle}>Profile Picture</th>
-          </tr>
-        </thead>
-        <tbody>
-          {users.map((user) => (
-            <tr key={user._id}>
-              <td style={tdStyle}>{user.name}</td>
-              <td style={tdStyle}>{user.email}</td>
-              <td style={tdStyle}>{user.role}</td>
-              <td style={tdStyle}>{user.status}</td>
-              <td style={tdStyle}>{user.emailVerified ? "Yes" : "No"}</td>
-              <td style={tdStyle}>
-                {user.profilePicture ? (
-                  <img
-                    src={user.profilePicture}
-                    alt="Profile"
-                    style={{
-                      width: "50px",
-                      height: "50px",
-                      borderRadius: "50%",
-                    }}
-                  />
-                ) : (
-                  "No Picture"
-                )}
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+    <div className="p-6 max-w-screen-xl mx-auto">
+      <h1 className="text-4xl font-bold text-center py-4">MANAGE USERS!</h1>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        {users.map((user) => (
+          <div
+            key={user._id}
+            className="bg-white border rounded-lg shadow-lg p-4 hover:shadow-xl transition-transform transform hover:scale-105"
+          >
+            <div className="text-center mb-4">
+              {user.profilePicture ? (
+                <img
+                  src={user.profilePicture}
+                  alt="Profile"
+                  className="w-20 h-20 rounded-full mx-auto object-cover"
+                />
+              ) : (
+                <div className="w-20 h-20 rounded-full bg-gray-200 flex items-center justify-center mx-auto">
+                  No Picture
+                </div>
+              )}
+            </div>
+            <div className="text-center space-y-2">
+              <h2 className="text-xl font-semibold">{user.name}</h2>
+              <p className="text-gray-600"><strong>Email:</strong> {user.email}</p>
+              <p className="text-gray-600"><strong>Role:</strong> {user.role}</p>
+              <p className="text-gray-600"><strong>Status:</strong> {user.status}</p>
+              <p className="text-gray-600"><strong>Email Verified:</strong> {user.emailVerified ? "Yes" : "No"}</p>
+            </div>
+            <div className="flex justify-evenly mt-4">
+              <button
+                className="bg-blue-500 w-1/4 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition"
+                onClick={() =>
+                  updateUserStatus(user._id, user.status === "active" ? "suspended" : "active")
+                }
+              >
+                {user.status === "active" ? "Suspend" : "Activate"}
+              </button>
+              <button
+                className="bg-red-500 w-1/4 text-white px-4 py-2 rounded-md hover:bg-red-600 transition"
+                onClick={() => openModal(user)}
+              >
+                Delete
+              </button>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {isModalOpen && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white p-6 rounded-lg shadow-lg text-center">
+            <h3 className="text-xl font-semibold mb-4">Are you sure you want to delete this user?</h3>
+            <p className="text-gray-700 mb-6">
+              {userToDelete?.name} ({userToDelete?.email})
+            </p>
+            <div className="flex justify-around">
+              <button
+                className="bg-red-500 w-1/4 text-white px-6 py-2 rounded-md hover:bg-red-600 transition"
+                onClick={deleteUser}
+              >
+                Delete
+              </button>
+              <button
+                className="bg-gray-300 w-1/4 px-6 py-2 rounded-md hover:bg-gray-400 transition"
+                onClick={closeModal}
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
 
-const thStyle = {
-  border: "1px solid #ccc",
-  padding: "10px",
-  textAlign: "left",
-  backgroundColor: "#f5f5f5",
-};
-
-const tdStyle = {
-  border: "1px solid #ccc",
-  padding: "10px",
-  textAlign: "left",
-};
-
 export default ManageUsers;
-

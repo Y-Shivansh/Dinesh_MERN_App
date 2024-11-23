@@ -24,7 +24,7 @@ router.get('/manage-users', verifyAdmin, async (req, res) => {
 // Deactivate/Activate User
 router.patch('/manage-users/:id', verifyAdmin, async (req, res) => {
     const { id } = req.params;
-    const { status } = req.body; // 'active' or 'inactive'
+    const { status } = req.body; // 'active' or 'suspended'
     try {
         const user = await User.findById(id);
         if (!user) return res.status(404).json({ message: 'User not found' });
@@ -51,17 +51,7 @@ router.delete('/manage-users/:id', verifyAdmin, async (req, res) => {
 });
 
 // Moderate Listings
-// All Listings
-router.get('/listings', verifyAdmin, async (req, res) => {
-    try {
-        const listings = await Listing.find(); // Get all listings (no moderation filter)
-        res.status(200).json(listings);
-    } catch (error) {
-        res.status(500).json({ message: 'Error fetching listings', error });
-    }
-});
-
-// List all unmoderated listings
+// All Unmoderated Listings
 router.get('/moderate-listings', verifyAdmin, async (req, res) => {
     try {
         const listings = await Listing.find({ isModerated: false });
@@ -70,6 +60,19 @@ router.get('/moderate-listings', verifyAdmin, async (req, res) => {
         res.status(500).json({ message: 'Error fetching listings', error });
     }
 });
+router.patch('/moderate-listings-approve/:id',verifyAdmin, async(req,res)=>{
+    try{
+        const id = req.params.id;
+        const listing = await Listing.findByIdAndUpdate(id, {isModerated: true} , { new: true });
+        if (!listing) {
+            return res.status(404).json({ message: "Listing not found" });
+        }
+        res.status(200).json({ message: "Listing approved", listing });
+    }catch(err){
+        console.error(err);
+        res.status(500).json({ message: "Server Error" });
+    }
+})
 
 // delete Listing
 router.delete('/moderate-listings/:id', verifyAdmin, async (req, res) => {
@@ -153,5 +156,15 @@ router.patch('/handle-reports/:id', verifyAdmin, async (req, res) => {
     }
 });
 
+
+// logout
+router.post('/logout',verifyAdmin, (req, res) => {
+    res.clearCookie('token', {
+        httpOnly: true,
+        secure: false,
+        path: '/'
+    });
+    res.status(200).json({ message: 'Logged out successfully' });
+});
 
 export default router;
