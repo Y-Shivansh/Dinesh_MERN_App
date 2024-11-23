@@ -39,7 +39,7 @@ function Carousel() {
         <div id="services" className=" overflow-hidden relative w-full border-t-[.3px] border-slate-300 sm:opacity-95 box-border" data-carousel="static">
             {/* Title */}
             <div className="px-3 flex flex-col items-center justify-center">
-                <div className="text-customBrown sm:text-[2.5rem] text-[1.8rem] my-5 uppercase font-wallpoet">What's on deck?</div>
+                <div className="text-customBrown font-extrabold sm:text-[2.5rem] text-[1.8rem] my-5 uppercase font-wallpoet">What's on deck?</div>
             </div>
             {/* Carousel wrapper */}
             <div className="px-3 flex flex-col items-center justify-center min-h-[500px] md:h-[70vh] h-full">
@@ -47,7 +47,7 @@ function Carousel() {
                 <div className="grid grid-cols-1 md:grid-cols-2 duration-700 ease-in-out items-center mx-5 md:mx-28 hidden carousel-slide-left" data-carousel-item>
                     <div className='flex justify-center items-center mb-7'>
                         <a href="">
-                            <img className="w-48 h-48 sm:w-72 sm:h-72 rounded-full floating-image shadow-[0px_10px_10px_0px_rgba(256,256,256,0.2)]" src="https://as1.ftcdn.net/v2/jpg/02/84/84/94/1000_F_284849453_UzNIRRcuYM5P1njdxai0WPQxwEKrz9uJ.jpg" alt="Slide 1" />
+                            <img className="w-48 h-48 sm:w-96 sm:h-96 rounded-full floating-image shadow-[0px_10px_10px_0px_rgba(256,256,256,0.2)]" src="https://as1.ftcdn.net/v2/jpg/02/84/84/94/1000_F_284849453_UzNIRRcuYM5P1njdxai0WPQxwEKrz9uJ.jpg" alt="Slide 1" />
                         </a>
                     </div>
                     <div className="text-black text-justify font-alternates font-thin md:text-lg md:tracking-wide md:leading-7 text-slide">
@@ -59,7 +59,7 @@ function Carousel() {
                 <div className="grid grid-cols-1 md:grid-cols-2 duration-700 ease-in-out items-center mx-5 md:mx-28 hidden carousel-slide-left" data-carousel-item>
                     <div className="flex justify-center items-center mb-7">
                         <a href="">
-                            <img className="w-48 h-48 sm:w-72 sm:h-72 rounded-full floating-image shadow-[0px_10px_10px_0px_rgba(256,256,256,0.2)]" src="https://cdn4.vectorstock.com/i/1000x1000/44/13/cartoon-hands-with-control-drone-isolated-vector-10744413.jpg" alt="Slide 2" />
+                            <img className="w-48 h-48 sm:w-96 sm:h-96 rounded-full floating-image shadow-[0px_10px_10px_0px_rgba(256,256,256,0.2)]" src="https://cdn4.vectorstock.com/i/1000x1000/44/13/cartoon-hands-with-control-drone-isolated-vector-10744413.jpg" alt="Slide 2" />
                         </a>
                     </div>
                     <div className="text-black text-justify font-alternates font-thin md:text-lg md:tracking-wide md:leading-7 text-slide">
@@ -71,7 +71,7 @@ function Carousel() {
                 <div className="grid grid-cols-1 md:grid-cols-2 duration-700 ease-in-out items-center mx-5 md:mx-28 hidden carousel-slide-left" data-carousel-item>
                     <div className="flex justify-center items-center mb-7">
                         <a href="">
-                            <img className="w-48 h-48 sm:w-72 sm:h-72 rounded-full floating-image shadow-[0px_10px_10px_0px_rgba(256,256,256,0.2)]" src="https://img.freepik.com/premium-vector/drawing-drone-with-green-top-blue-green-background_410516-78882.jpg" alt="Slide 3" />
+                            <img className="w-48 h-48 sm:w-96 sm:h-96 rounded-full floating-image shadow-[0px_10px_10px_0px_rgba(256,256,256,0.2)]" src="https://img.freepik.com/premium-vector/drawing-drone-with-green-top-blue-green-background_410516-78882.jpg" alt="Slide 3" />
                         </a>
                     </div>
                     <div className="text-black text-justify font-alternates font-thin md:text-lg md:tracking-wide md:leading-7 text-slide">
