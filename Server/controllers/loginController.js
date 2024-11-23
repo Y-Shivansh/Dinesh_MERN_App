@@ -13,7 +13,9 @@ export const loginUser = async (req, res) => {
         // console.log(password);
 
         const user = await User.findOne({ email })
-
+        if(user.status==='suspended') {
+            return res.status(401).json({ message: 'suspended account.' });
+        }
         if (!user) {
             return res.status(404).json({ message: 'User not found' });
         }
