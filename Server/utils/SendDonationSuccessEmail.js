@@ -51,7 +51,7 @@ Warm regards,
 
         // Send the email
         await transporter.sendMail(mailOptions);
-        
+        console.log('Donation success email sent to:', email);
     } catch (error) {
         
         console.error('Error sending donation success email:', error);

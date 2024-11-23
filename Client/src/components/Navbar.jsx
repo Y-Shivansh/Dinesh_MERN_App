@@ -17,7 +17,7 @@ const Navbar = () => {
       try {
         const res = await axios.get("http://localhost:3000/api/user/profile", { withCredentials: true });
         setUser(res.data);
-        // 
+        // console.log(res.data);
         
       } catch (error) {
         console.error("Error fetching user profile", error);

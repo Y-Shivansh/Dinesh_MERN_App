@@ -34,7 +34,7 @@ export const createFoodListing = async (req, res) => {
             address: locationAddress,
             coordinates: [parseFloat(longitude), parseFloat(latitude)]
         };
-        
+        console.log(location);
 
         if (
             isNaN(location.coordinates[0]) ||
@@ -113,8 +113,8 @@ export const updateFoodListing = async (req, res) => {
         const updateData = req.body; 
         const photo = req.file;
 
-        
-        
+        console.log("Request Body:", updateData);
+        console.log("Request File:", photo);
 
         if (photo) {
             // Upload photo to Cloudinary
@@ -162,8 +162,8 @@ export const deleteFoodListing = async (req, res) => {
             return res.status(404).json({ error: "Food listing not found." });
         }
         
-        
-        
+        console.log("check: ", deletedListing.postedBy.toString());
+        console.log("userId: ", userId);
 
         // Ensure the logged-in user is the one who posted the listing
         if (deletedListing.postedBy.toString() !== userId.toString()) {
@@ -196,17 +196,17 @@ export const getAllFoodListings = async (req, res) => {
                 message: 'Food item not found',
             });
         }
-        // 
-        // 
+        // console.log(user);
+        // console.log(allFoodItems);
 
-        // 
+        // console.log(allFoodItems);
 
         res.status(200).json({
             allFoodItems
         });
     } catch (err) {
         // Handle any errors
-        
+        console.log(err);
         res.status(400).json({
             status: 'error',
             message: 'Error fetching food item',
@@ -274,7 +274,7 @@ export const getFilteredFoodListings = async (req, res) => {
             newFood
         });
     } catch (err) {
-        
+        console.log(err);
         res.status(400).json({
             status: 'error coming',
             message: err,
@@ -296,7 +296,7 @@ export const getFoodListingById = async (req, res) => {
         }
         res.status(200).json({ user,foodItem });
     } catch (err) {
-        
+        console.log(err);
         res.status(400).json({
             status: 'error',
             message: 'Error fetching food item',
@@ -315,7 +315,7 @@ export const getUserFoodListing = async (req,res) => {
         }
         return res.status(200).json({ listings });
     } catch (error) {
-        
+        console.log(error);
         return res.status(500).json({message: "Server Error"})
         
     }

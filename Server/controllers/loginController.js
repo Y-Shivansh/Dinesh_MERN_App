@@ -9,8 +9,8 @@ export const loginUser = async (req, res) => {
             return res.status(400).json({ errors: errors.array() });
         }
         const { email, password } = req.body;
-        // 
-        // 
+        // console.log(email);
+        // console.log(password);
 
         const user = await User.findOne({ email })
         if(user.status==='suspended') {
@@ -25,7 +25,7 @@ export const loginUser = async (req, res) => {
             return res.status(401).json({ message: 'Invalid credentials' });
         }
         const token = generateToken(user._id);
-        // 
+        // console.log(token);
         res.cookie('token', token, {
             httpOnly: true,
             secure: false,  // Set to true if using HTTPS

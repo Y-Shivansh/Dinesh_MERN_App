@@ -16,7 +16,7 @@ if (!process.env.MONGODB_URI) {
 // Connect to MongoDB
 mongoose
   .connect(process.env.MONGODB_URI)
-  .then(() => 
+  .then(() => console.log('DB connection successful!'))
   .catch(err => {
     console.error('DB connection error:', err);
     process.exit(1);
@@ -39,7 +39,7 @@ const tours = JSON.parse(fs.readFileSync(filePath, 'utf-8'));
 const importData = async () => {
   try {
     await Donation.create(tours);
-    
+    console.log('Data successfully loaded!');
   } catch (err) {
     console.error('Error importing data:', err);
   }
@@ -50,7 +50,7 @@ const importData = async () => {
 const deleteData = async () => {
   try {
     await FoodListing.deleteMany();
-    
+    console.log('Data successfully deleted!');
   } catch (err) {
     console.error('Error deleting data:', err);
   }
@@ -63,7 +63,7 @@ if (process.argv[2] === '--import') {
 } else if (process.argv[2] === '--delete') {
   deleteData();
 } else {
-  
+  console.log('Invalid command. Use --import to import data or --delete to delete data.');
   process.exit(1);
 }
 

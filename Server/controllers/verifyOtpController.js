@@ -26,7 +26,7 @@ export const verifyOtpController = async (req, res) => {
             return res.status(400).json({ message: "Invalid OTP" })
         }
         // if (enteredOtp === otp) {
-        // 
+        // console.log(otpRecord.password);
         const hashedPassword = await bcrypt.hash(otpRecord.password, 10)
         const newUser = await new User({
             name: otpRecord.name,
@@ -49,7 +49,7 @@ export const verifyOtpController = async (req, res) => {
         // res.status(400).json({ message: "exceptional error" })
     }
     catch (error) {
-        
+        console.log(error);
         res.status(500).json({ message: "Server Error in OTP" })
 
     }

@@ -10,12 +10,12 @@ export const updatePassword = async (req, res) => {
         if (!errors.isEmpty()) {
             return res.status(400).json({ errors: errors.array() });
         }
-        // 
+        // console.log("HELLO" , userId);
         
         const { newPassword, oldPassword } = req.body;
         
         const user = await User.findById(req.user.userId);
-        // 
+        // console.log(req.user);
         
         if (!user) {
             
@@ -30,7 +30,7 @@ export const updatePassword = async (req, res) => {
 
         // Hash the new password and save it
         const hashedPassword = await bcrypt.hash(newPassword, 10);
-        
+        console.log(hashedPassword);
         
         user.password = hashedPassword;
         await user.save();
