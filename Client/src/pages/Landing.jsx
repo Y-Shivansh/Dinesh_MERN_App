@@ -49,8 +49,8 @@ const Landing = () => {
       <Carousel />
       <main className="p-8">
         {/* About Us Section */}
-        <section ref={aboutRef} className="mt-8 bg-gray-100 p-6 rounded-xl" id="about">
           <h2 className="text-2xl font-bold mb-4 text-secondaryCol">About Us</h2>
+        <section ref={aboutRef} className="mt-8 bg-gray-100 p-6 rounded-xl" id="about">
           <p className="text-paraText">
             FoodDonation was founded with the mission to make philanthropy easier, more transparent, and impactful. We connect donors to a wide range of charitable causes globally. Our platform allows for secure donations, real-time tracking of funds, and ensures that your contributions make a meaningful difference in the lives of those in need.
           </p>
