@@ -1,27 +1,41 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
-import { toast, ToastContainer } from 'react-toastify'; // Import toast
-import 'react-toastify/dist/ReactToastify.css'; // Import styles
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const FoodDetail = () => {
   const { id } = useParams();
   const [foodItem, setFoodItem] = useState(null);
-  const [userRatings, setUserRatings] = useState([]);
+  const [userRatings, setUserRatings] = useState(0);
+  const [userName, setUserName] = useState("");
+  const [userEmail, setUserEmail] = useState("");
+  const [userRole, setUserRole] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [showProfileOverlay, setShowProfileOverlay] = useState(false); // State for profile overlay
   const [showRequestOverlay, setShowRequestOverlay] = useState(false); // State for request overlay
-  const [donate,setDonate]=useState();
-  const [scheduledPickup,setScheduledPickup]=useState(null);
-  const [completionDate,setCompletionDate]=useState(null);
+  const [donate, setDonate] = useState();
+  const [scheduledPickup, setScheduledPickup] = useState(null);
+  const [completionDate, setCompletionDate] = useState(null);
+
   useEffect(() => {
     const fetchFoodItem = async () => {
       try {
         const response = await axios.get(`http://localhost:3000/api/listings/FoodListings/${id}`, { withCredentials: true });
         const data = response.data;
+        const user = data.user;
+        const rating = user.rating;
+        const name = user.name;
+        const email = user.email;
+        const role = user.role;
+
         if (response.status === 200) {
           setFoodItem(data.foodItem);
+          setUserRatings(rating);
+          setUserName(name);
+          setUserEmail(email);
+          setUserRole(role);
           toast.success('Food item loaded successfully!');
         } else {
           setFoodItem(null);
@@ -44,19 +58,15 @@ const FoodDetail = () => {
         const res = await axios.get(`http://localhost:3000/api/user/donate/donations/${id}`, { withCredentials: true });
         const data = res.data;
         if (res.status === 200) {
-          console.log(data.donation[0].completionDate);
-          
           setDonate(data.donation[0].status);
           setScheduledPickup(data.donation[0].scheduledPickup);
-          setCompletionDate(data.donation[0].completionDate)
-          // toast.success('Food item loaded successfully!');
+          setCompletionDate(data.donation[0].completionDate);
         } else {
           setDonate(null);
         }
       } catch (error) {
         console.error('Error fetching food item:', error);
         setDonate(null);
-        // toast.error('Food item not found!');
       } finally {
         setLoading(false);
       }
@@ -69,30 +79,66 @@ const FoodDetail = () => {
   const handleConfirmRequest = async () => {
     try {
       const requestBody = {
-          foodListing: foodItem._id,   // ID of the food listing
-          // requestedBy: userId,        //Send by user ==>backend req.user.userId
+        foodListing: foodItem._id,
       };
-      console.log(requestBody);
-      
-      
+
       const response = await axios.post(
-          'http://localhost:3000/api/user/donate/donations', 
-          requestBody, 
-          { withCredentials: true } 
+        'http://localhost:3000/api/user/donate/donations',
+        requestBody,
+        { withCredentials: true }
       );
 
       console.log('Donation request successful:', response.data);
-  } catch (error) {
+      location.reload()
+    } catch (error) {
       if (error.response) {
-          console.error('Error response:', error.response.data);
-          alert(error.response.data.error || 'Something went wrong while submitting the request.');
+        console.error('Error response:', error.response.data);
+        alert(error.response.data.error || 'Something went wrong while submitting the request.');
       } else {
-          console.error('Error:', error.message);
-          alert('Unable to process the request. Please try again later.');
+        console.error('Error:', error.message);
+        alert('Unable to process the request. Please try again later.');
       }
-  }finally{
-    setShowRequestOverlay(false);
-  }
+    } finally {
+      setShowRequestOverlay(false);
+    }
+  };
+
+  const handleViewProfile = () => {
+    // Trigger toast to show profile details
+    toast(
+      <div className="w-full px-4 py-4">
+        <h3 className="text-black text-xl font-bold text-center my-2">USER PROFILE</h3>
+        <p>
+          <strong>Name:</strong> {userName}
+        </p>
+        <p>
+          <strong>Email:</strong> {userEmail}
+        </p>
+        <p>
+          <strong>Role:</strong> {userRole}
+        </p>
+        <p>
+          <strong>Rating:</strong> {userRatings.toFixed(1)}
+        </p>
+      </div>,
+      {
+        position: 'top-center',
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        style: {
+          fontSize: '14px',
+          padding: '10px',
+          width: '90vw', // For mobile responsiveness
+          height: 'auto', // Adjust the height as per content
+          borderRadius: '20px',
+          background: '#ededed',
+        },
+        className: 'max-w-md w-full', // Ensure the toast doesn't go beyond a max width
+      }
+    );
+    
   };
 
   if (loading) {
@@ -137,28 +183,32 @@ const FoodDetail = () => {
               </div>
             </div>
             <div className="flex space-x-2 w-full">
-            <div
+              <div
                 onClick={() => setShowRequestOverlay(true)}
                 className={`${
-                  donate === 'requested' 
-                    ? 'bg-brown-500 hover:bg-brown-600' 
-                    : donate === 'accepted' 
+                  donate === 'requested'
+                    ? 'bg-brown-500 hover:bg-brown-600'
+                    : donate === 'accepted'
                     ? 'bg-blue-500 hover:bg-blue-600'
-                    : donate === 'scheduled' 
+                    : donate === 'scheduled'
                     ? 'bg-yellow-500 hover:bg-yellow-600'
-                    : donate === 'completed' 
-                    ? 'bg-green-500 hover:bg-green-600' 
+                    : donate === 'completed'
+                    ? 'bg-green-500 hover:bg-green-600'
                     : 'bg-gray-500 hover:bg-gray-600'
                 } text-green rounded-md py-2 px-6 w-full md:w-auto cursor-pointer transition-all duration-200 transform text-center`}
               >
-                 {donate === 'requested' ? 'Requested' : 
-                  donate === 'accepted' ? 'Accepted' :
-                  donate === 'scheduled' ? `Scheduled: ${new Date(scheduledPickup).toLocaleDateString()}` :
-                  donate === 'completed' ? `Completed: ${new Date(completionDate).toLocaleDateString()}` : 'Request'}
-
+                {donate === 'requested'
+                  ? 'Requested'
+                  : donate === 'accepted'
+                  ? 'Accepted'
+                  : donate === 'scheduled'
+                  ? `Scheduled: ${new Date(scheduledPickup).toLocaleDateString()}`
+                  : donate === 'completed'
+                  ? `Completed: ${new Date(completionDate).toLocaleDateString()}`
+                  : 'Request'}
               </div>
               <div
-                onClick={() => setShowProfileOverlay(true)}
+                onClick={handleViewProfile}
                 className="bg-green-500 hover:bg-green-600 text-white rounded-md py-2 px-6 w-full md:w-auto cursor-pointer transition-all duration-200 transform text-center"
               >
                 View Profile
@@ -168,34 +218,36 @@ const FoodDetail = () => {
         </div>
 
         {/* Request Overlay */}
-        {showRequestOverlay &&  donate !== 'requested'&&  donate !== 'accepted' && donate !== 'scheduled'&& donate !== 'completed' && (
-          <div className="absolute inset-0 flex justify-center items-center bg-black bg-opacity-50">
-            <div className="bg-white p-8 rounded-2xl shadow-lg w-full max-w-4xl text-center">
-              <h2 className="text-2xl font-semibold mb-4 text-green-600">Request Confirmation</h2>
-              <p className="text-lg text-gray-700">
-                Are you sure you want to request this food item? Please confirm your action.
-              </p>
-              <div className="flex justify-center mt-6 space-x-4">
-                <button
-                  onClick={handleConfirmRequest} 
-                  className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-6 rounded-md transition-all duration-200"
-                >
-                  Confirm
-                </button>
-                <button
-                  onClick={() => setShowRequestOverlay(false)}
-                  className="bg-red-500 hover:bg-red-600 text-white py-2 px-6 rounded-md transition-all duration-200"
-                >
-                  Cancel
-                </button>
+        {showRequestOverlay &&
+          donate !== 'requested' &&
+          donate !== 'accepted' &&
+          donate !== 'scheduled' &&
+          donate !== 'completed' && (
+            <div className="absolute inset-0 flex justify-center items-center bg-black bg-opacity-50">
+              <div className="bg-white p-8 rounded-2xl shadow-lg w-full max-w-4xl text-center">
+                <h2 className="text-2xl font-semibold mb-4 text-green-600">Request Confirmation</h2>
+                <p className="text-lg text-gray-700">
+                  Are you sure you want to request this food item? Please confirm your action.
+                </p>
+                <div className="flex justify-center mt-6 space-x-4">
+                  <button
+                    onClick={handleConfirmRequest}
+                    className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-6 rounded-md transition-all duration-200"
+                  >
+                    Confirm
+                  </button>
+                  <button
+                    onClick={() => setShowRequestOverlay(false)}
+                    className="bg-red-500 hover:bg-red-600 text-white py-2 px-6 rounded-md transition-all duration-200"
+                  >
+                    Cancel
+                  </button>
+                </div>
               </div>
             </div>
-          </div>
-        )}
-
-        {/* Toast Container */}
-        <ToastContainer position="top-right" autoClose={500} hideProgressBar newestOnTop closeButton />
+          )}
       </div>
+      <ToastContainer />
     </div>
   );
 };

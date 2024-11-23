@@ -1,7 +1,7 @@
 import express from 'express';
 import { body, check, validationResult } from 'express-validator';
 import User from "../models/user.js";
-import { authenticate, isAdmin, authMiddleware } from "../middlewares/authenticate.js";
+import { isAdmin, authMiddleware } from "../middlewares/authenticate.js";
 import { registerUser } from '../controllers/registerController.js'
 import { loginUser } from '../controllers/loginController.js'
 import { verifyOtpController } from '../controllers/verifyOtpController.js';
@@ -74,7 +74,7 @@ router.get("/profile", authMiddleware, async (req, res) => {
 });
 
 
-router.put("/profile", authMiddleware, upload.single("photo"), async (req, res) => {
+router.put("/profile", upload.single("profilePicture"), authMiddleware, async (req, res) => {
     try {
         // Remove the password field from the body if it exists (not updating password here)
         const { password, ...updateData } = req.body;

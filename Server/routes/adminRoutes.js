@@ -1,10 +1,10 @@
 import express from 'express';
 import { verifyAdmin } from '../middlewares/verifyAdmin.js';
-import { validationResult } from 'express-validator';
+// import { validationResult } from 'express-validator';
 import User from '../models/user.js';  // Assuming you have a User model
 import Listing from '../models/FoodListing.js';  // Assuming you have a Listing model
 import Report from '../models/Report.js';  // Assuming you have a Report model
-import { generateToken } from '../utils/generateToken.js';
+// import { generateToken } from '../utils/generateToken.js';
 import Admin from '../models/Admin.js';
 
 const router = express.Router();

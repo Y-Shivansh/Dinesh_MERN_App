@@ -42,6 +42,10 @@ const foodListingSchema = new mongoose.Schema(
             type: Boolean, 
             default: false 
         }, 
+        isReported: {
+            type: Boolean,
+            default: false
+        }
     },
     { timestamps: true }
 );

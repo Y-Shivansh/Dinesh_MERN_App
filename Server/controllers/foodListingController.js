@@ -3,6 +3,7 @@ import { uploadOnCloudinary } from "../utils/Cloudinary.js";
 import FoodListing from "../models/FoodListing.js";
 import User from '../models/user.js'
 import { validationResult } from 'express-validator';
+import multer from "multer";
 
 export const createFoodListing = async (req, res) => {
     try {
@@ -57,12 +58,10 @@ export const createFoodListing = async (req, res) => {
         // Parse and validate quantity and expiration date
         const parsedQuantity = parseInt(quantity, 10);
         const parsedExpirationDate = (() => {
-            const [day, month, year] = expirationDate.split('-');
-            const isoFormattedDate = `${year}-${month}-${day}`;
-            const parsedDate = new Date(isoFormattedDate);
-
+            const parsedDate = new Date(expirationDate); // Directly parse the ISO format (yyyy-mm-dd)
+        
             if (parsedDate.toString() === "Invalid Date") {
-                throw new Error("Invalid date format. Please use dd-mm-yyyy.");
+                throw new Error("Invalid date format. Please use a valid date.");
             }
             return parsedDate;
         })();
@@ -108,22 +107,23 @@ export const createFoodListing = async (req, res) => {
 
 export const updateFoodListing = async (req, res) => {
     try {
+        const userId = req.user.userId;
         const listingId = req.params.id;
-        const updateData = req.body;
-        const photo = req.file ;
-        const uploadedPhoto = null;
+        const updateData = req.body; 
+        const photo = req.file;
+
+        console.log("Request Body:", updateData);
+        console.log("Request File:", photo);
 
         if (photo) {
-                const uploadedImage = await uploadOnCloudinary(photo.path);
-                if (uploadedImage) {
-                    uploadedPhoto.push(uploadedImage.url);
+            // Upload photo to Cloudinary
+            const uploadedImage = await uploadOnCloudinary(photo.path);
+            if (uploadedImage) {
+                updateData.photo = uploadedImage.url; // Assign Cloudinary URL
             }
         }
 
-        if (uploadedPhoto.length > 0) {
-            updateData.photo = uploadedPhoto;
-        }
-
+        // Update the food listing
         const updatedListing = await FoodListing.findByIdAndUpdate(listingId, updateData, {
             new: true,
             runValidators: true,
@@ -133,8 +133,8 @@ export const updateFoodListing = async (req, res) => {
             return res.status(404).json({ error: "Food listing not found." });
         }
 
-        // Ensure the logged-in user is the one updating the listing
-        if (updatedListing.postedBy.toString() !== req.user._id.toString()) {
+        // Ensure the logged-in user is authorized
+        if (updatedListing.postedBy.toString() !== userId.toString()) {
             return res.status(403).json({ error: "You are not authorized to update this listing." });
         }
 
@@ -143,35 +143,47 @@ export const updateFoodListing = async (req, res) => {
             listing: updatedListing,
         });
     } catch (error) {
-        res.status(500).json({ error: "Error updating food listing. Please try again later." });
+        console.error("Error:", error.message);
+        res.status(500).json({ error: "Failed to update the listing. Please try again later." });
     }
 };
 
+
+
 export const deleteFoodListing = async (req, res) => {
     try {
-        const listingId = req.params.id;
-
-        const deletedListing = await FoodListing.findByIdAndDelete(listingId);
-
+        const userId = req.user.userId; // Logged-in user's ID
+        const listingId = req.params.id; // ID of the food listing to delete
+        
+        const deletedListing = await FoodListing.findById(listingId);
+        
         if (!deletedListing) {
             return res.status(404).json({ error: "Food listing not found." });
         }
+        
+        console.log("check: ", deletedListing.postedBy.toString());
+        console.log("userId: ", userId);
 
         // Ensure the logged-in user is the one who posted the listing
-        if (deletedListing.postedBy.toString() !== req.user._id.toString()) {
+        if (deletedListing.postedBy.toString() !== userId.toString()) {
             return res.status(403).json({ error: "You are not authorized to delete this listing." });
         }
 
+        // Delete the listing
+        await FoodListing.findByIdAndDelete(listingId);
+
         // Update the user's foodItems array
-        const user = await User.findById(req.user._id);
+        const user = await User.findById(userId);
         user.foodItems = user.foodItems.filter(item => item.toString() !== listingId);
         await user.save();
 
         res.status(200).json({ message: "Food listing deleted successfully!" });
     } catch (error) {
+        console.error(error);
         res.status(500).json({ error: "Error deleting food listing. Please try again later." });
     }
 };
+
 
 export const getAllFoodListings = async (req, res) => {
     try {
@@ -273,20 +285,37 @@ export const getFoodListingById = async (req, res) => {
     try {
         const foodId = req.params.id;
         const foodItem = await FoodListing.findById(foodId);
-
+        const user = await User.findById(foodItem.postedBy)
+        
         if (!foodItem) {
             return res.status(404).json({
                 status: 'fail',
                 message: 'Food item not found',
             });
         }
-        res.status(200).json({ foodItem });
+        res.status(200).json({ user,foodItem });
     } catch (err) {
-
         console.log(err);
         res.status(400).json({
             status: 'error',
             message: 'Error fetching food item',
         });
+    }
+}
+export const getUserFoodListing = async (req,res) => {
+    try {
+        const userId = req.user.userId;
+        if(!userId){
+            return res.status(404).json({message: "User Not Found"})
+        }
+        const listings = await FoodListing.find({ postedBy: userId });
+        if (listings.length === 0) {
+            return res.status(200).json({ message: "No Donations made yet!", listings: [] });
+        }
+        return res.status(200).json({ listings });
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({message: "Server Error"})
+        
     }
 }

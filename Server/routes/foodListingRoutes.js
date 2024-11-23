@@ -1,5 +1,5 @@
 import express from "express";
-import { getAllFoodListings,getFilteredFoodListings, getSearchedFoodListings,getFoodListingById, createFoodListing, updateFoodListing, deleteFoodListing } from "../controllers/foodListingController.js";
+import { getAllFoodListings,getFilteredFoodListings, getUserFoodListing , getSearchedFoodListings,getFoodListingById, createFoodListing, updateFoodListing, deleteFoodListing } from "../controllers/foodListingController.js";
 import { authMiddleware } from "../middlewares/authenticate.js";
 import { upload } from "../middlewares/multer.js"; 
 import {body} from 'express-validator'
@@ -9,9 +9,10 @@ const router = express.Router();
 router.get("/FoodListings", authMiddleware,getAllFoodListings);
 router.get("/FoodSearched-Listings/:filter", authMiddleware,getSearchedFoodListings);
 router.get("/FoodListings/:id",authMiddleware, getFoodListingById);
-router.put("/FoodListings/:id",authMiddleware,updateFoodListing);
-router.delete("/FoodListings/:id",authMiddleware, deleteFoodListing);
+router.put("/FoodListings/:id",upload.single("photo"),authMiddleware,updateFoodListing);
 router.get("/FoodListings/Filtered", authMiddleware,getFilteredFoodListings);
+router.get("/user-FoodListings", authMiddleware,getUserFoodListing);
+router.delete("/FoodListings/:id",authMiddleware, deleteFoodListing);
 
 router.post(
     "/Create-FoodListings",

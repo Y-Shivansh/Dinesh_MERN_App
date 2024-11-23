@@ -113,7 +113,7 @@ const Navbar = () => {
             mn1={"Profile Picture"}
             mn2={"Update Password"}
             mn3={"Log Out"}
-            m4={"Requests"} 
+            m4={"My Listings"}
             m5={"Edit Your Details"}/>
             </div>
           ) : (
@@ -186,7 +186,9 @@ const Navbar = () => {
             mn1={"Profile Picture"}
             mn2={"Update Password"}
             mn3={"Log Out"}
-            m4={"Requests"} />
+            m4={"My Listings"} 
+            m5={"Edit Your Details"}/>
+            
             </li>
           ) : (
             <>

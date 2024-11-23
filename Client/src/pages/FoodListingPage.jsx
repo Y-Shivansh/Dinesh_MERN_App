@@ -19,21 +19,25 @@ const FoodListingPage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [lists, setLists] = useState([]);
-  const [user, setUser] = useState(null); 
-  
+  const [user, setUser] = useState(null);
+
   useEffect(() => {
     // Fetch data from the API:
     const fetchFoodListings = async () => {
       try {
         const response = await axios.get('http://localhost:3000/api/listings/FoodListings', { withCredentials: true });
-        const data = response.data
-        if (response.status != 200) {
+        const data = response.data;
+        
+        if (response.status !== 200) {
           throw new Error(`Error: ${response.statusText}`);
         }
+        
         const res = await axios.get("http://localhost:3000/api/user/profile", { withCredentials: true });
         setUser(res.data);
 
-        setFoodItems(data.allFoodItems); 
+        // Filter out food items posted by the current user
+        const filteredFoodItems = data.allFoodItems.filter(item => item.postedBy !== res.data._id);
+        setFoodItems(filteredFoodItems);
       } catch (err) {
         setError(err.message || "Something went wrong while fetching food items.");
       } finally {
@@ -45,7 +49,7 @@ const FoodListingPage = () => {
   }, []);
 
   const renderFoodItems = lists.length > 0 ? lists : foodItems;
-  
+
   if (loading) {
     return <Loader />;
   }
@@ -59,7 +63,7 @@ const FoodListingPage = () => {
       <nav className="bg-transparent sm:flex-row py-2 px-2 text-white  w-full top-0 z-10 flex flex-col justify-between items-center">
         {/* Logo */}
         <div className="text-xl font-bold">
-          <Link to="/food-listings" className="text-headingCol sm:text-2xl hover:text-headingColHover no-underline">
+          <Link to="/" className="text-headingCol sm:text-2xl hover:text-headingColHover no-underline">
             FoodDonation
           </Link>
         </div>
@@ -75,9 +79,8 @@ const FoodListingPage = () => {
             mn1={"Profile"}
             mn2={"Update Password"}
             mn3={"Log Out"}
-            m4={"Requests"} />
+            m4={"My Listings"} />
         </div>
-
       </nav>
 
       <h1 className="text-3xl font-bold text-center mt-14 text-headingCol">FOOD LISTINGS!</h1>
@@ -88,4 +91,3 @@ const FoodListingPage = () => {
 };
 
 export default FoodListingPage;
-

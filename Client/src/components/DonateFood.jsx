@@ -71,6 +71,7 @@ export const DonateFood = ({ setIsModalOpen }) => {
                 photo: null,
             });
             setIsModalOpen(false); // Close modal after submission
+            location.reload()
         } catch (error) {
             console.error(error);
             toast.error("Something went wrong. Please try again."); // Error toast
