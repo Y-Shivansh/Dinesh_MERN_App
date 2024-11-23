@@ -8,7 +8,7 @@ import { VerificationForm } from './pages/VerificationForm';
 import { ResetForm } from './pages/ResetForm';
 import { ResetFormVerification } from './pages/ResetFormVerificationForm';
 import Landing from './pages/Landing';
-import FoodListingPage from './pages/FoodListingPage'; // Import the FoodListingPage component
+import FoodListingPage from './pages/FoodListingPage';
 import UpdatePassword from './pages/UpdatePassword';
 
 function App() {

@@ -18,14 +18,13 @@ export const Signin = () => {
     const [user, setUser] = useState(null); 
 
     useEffect(() => {
-        // Check if the user is already logged in
         const fetchUserProfile = async () => {
             try {
                 const res = await axios.get("http://localhost:3000/api/user/profile", { withCredentials: true });
-                setUser(res.data);  // Set the user profile in state
+                setUser(res.data);
                 
                 if (res.data) {
-                    navigate("/food-listings");  // Redirect to food-listings if the user is logged in
+                    navigate("/food-listings");
                 }
             } catch (error) {
                 console.error("Error fetching user profile", error);
