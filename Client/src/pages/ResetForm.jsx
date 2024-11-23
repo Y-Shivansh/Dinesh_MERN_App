@@ -25,16 +25,16 @@ export const ResetForm = () => {
             if (response.status === 200) {
                 navigate(`/reset-password-verification?email=${email}`);
             } else {
-                console.log("Reset Password Failed: ", response.data.message);
+                
             }
 
         } catch (err) {
             if (err.response) {
-                console.log("Error Occurred", err.response.data.message);
+                
                 setError(err.response.data.message || "Error Occurred");
             }
             else {
-                console.log("Error logging in: ", err.message);
+                
                 setError("Something went wrong, try again!");
             }
         }finally{

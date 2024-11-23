@@ -18,7 +18,7 @@ export const loginAdmin = async (req, res) => {
         if (!isMatch) return res.status(400).json({ message: 'Invalid credentials' });
 
         const token = generateToken(admin._id)
-        console.log(token);
+        
         
         res.cookie('token', token, {
             httpOnly: true,
@@ -36,7 +36,7 @@ export const loginAdmin = async (req, res) => {
             }
         })
     } catch (error) {
-        console.log(error);
+        
         res.status(500).json({ message: 'Server error' });
     }
 }

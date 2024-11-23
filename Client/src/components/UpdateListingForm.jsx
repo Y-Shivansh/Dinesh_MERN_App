@@ -60,9 +60,9 @@ export const UpdateListingForm = () => {
   
       // Debugging FormData
       for (let pair of formDataToSend.entries()) {
-        console.log(`${pair[0]}: ${pair[1]}`);
+        
       }
-      console.log(formData);
+      
       
   
       await axios.put(

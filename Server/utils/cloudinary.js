@@ -21,7 +21,7 @@ import fs from "fs";//file system
             const response = await cloudinary.uploader.upload(localFilePath, {
               resource_type: "auto"
             });
-            console.log("FILE is uploaded on cloudinary ", response.url);
+            
             return response;
           } catch (error) {
             console.error("Error during Cloudinary upload:", error);

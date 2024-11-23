@@ -13,7 +13,7 @@ const seedAdmin = async () => {
         }
         const existingAdmin = await Admin.findOne({ email: adminCredentials.email });
         if (existingAdmin) {
-            console.log('Admin already exists');
+            
             return;
         }
     
@@ -22,7 +22,7 @@ const seedAdmin = async () => {
 
         // Save to the database
         await admin.save();
-        console.log('Admin seeded successfully');
+        
     } catch (err) {
         console.error('Error seeding admin:', err.message);
     }

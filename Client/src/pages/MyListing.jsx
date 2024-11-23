@@ -46,7 +46,7 @@ export const MyListing = () => {
     if (window.confirm("Are you sure you want to delete this listing?")) {
       try {
         const response = await axios.delete(`http://localhost:3000/api/listings/FoodListings/${id}`, { withCredentials: true });
-        console.log(response);
+        
         if(response.status !== 200){
             setError("Error Deleting")
         }

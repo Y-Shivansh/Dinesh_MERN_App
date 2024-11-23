@@ -66,7 +66,7 @@ export const requestDonation = async(req,res)=>{
 };
 
 export const markDonationCompleted = async (req, res) => {
-    // console.log("hello");
+    // 
     
     try {
         const { id } = req.params;
@@ -94,7 +94,7 @@ export const getDonationDetails = async (req, res) => {
     try {
         
         const id = req.user.userId;
-        // console.log(id);
+        // 
         
         const foodId = req.params.id;
         const donation = await Donate.find({ foodListing:foodId,requestedBy:id})
@@ -170,7 +170,7 @@ export const getAllDetails = async (req, res) => {
             .populate("requestedBy")
             .populate("acceptedBy");
         
-        // console.log(donation);
+        // 
         
         if (!donation || donation.length === 0) {
             return res.status(201).json({ error: "No donations found for this user." });

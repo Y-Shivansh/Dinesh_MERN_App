@@ -47,7 +47,7 @@ export const Signup = () => {
                 {/* {error && <p className="text-red-500 text-sm">{error}</p>} */}
                     <Button label={"Sign Up"} onClick={async () => {
                         if (!name || !email || !password) {
-                            console.log("All fields are required.");
+                            
                             return;
                         }
                         try {
@@ -63,12 +63,12 @@ export const Signup = () => {
                             if (response.data.message === "Otp sent") {
                                 navigate(`/signup/verify?email=${email}`);
                             } else {
-                                console.log("Signup failed: ", response.data.message);
+                                
                             }
                         }
                         catch (err) {
                             setError(err)
-                            console.log("Error Signing up: ", err.data);
+                            
                         }
                     }} />
                 </div>

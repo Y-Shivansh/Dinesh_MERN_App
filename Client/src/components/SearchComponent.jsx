@@ -12,7 +12,7 @@ export function Search({ setLists }) {
         setOriginalLists(response.data.list); // Save the full list in originalLists
         setLists(response.data.list); // Set the full list initially
       } catch (err) {
-        console.log("Error Loading Lists");
+        
       }
     };
     fetchLists();
@@ -26,7 +26,7 @@ export function Search({ setLists }) {
           const filteredLists = response.data.list;
           setLists(filteredLists);
         } catch (err) {
-          console.log("Error Loading Lists");
+          
         }
       } else {
         // If the filter is empty, reset to original list

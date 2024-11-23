@@ -88,7 +88,7 @@ const FoodDetail = () => {
         { withCredentials: true }
       );
 
-      console.log('Donation request successful:', response.data);
+      
       location.reload()
     } catch (error) {
       if (error.response) {

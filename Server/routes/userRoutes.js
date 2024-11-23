@@ -58,13 +58,13 @@ router.put("/update-password",[
 router.get("/profile", authMiddleware, async (req, res) => {
     try {
         const userId =req.user.userId;
-        // console.log(userId);
+        // 
         
         const user = await User.findById(userId);
-        // console.log(user);
+        // 
         
         if (!user) return res.status(404).json({ message: "User not found" });
-        // console.log(user);
+        // 
         
         res.status(200).json(user);
     } catch (error) {
@@ -81,7 +81,7 @@ router.put("/profile", upload.single("profilePicture"), authMiddleware, async (r
 
         // Get the uploaded photo (file)
         const photo = req.file;
-        console.log(photo.path); // Logs the path of the uploaded file (in the temporary folder)
+        
 
         // If there's a photo, upload it to Cloudinary
         if (photo.path) {
@@ -91,7 +91,7 @@ router.put("/profile", upload.single("profilePicture"), authMiddleware, async (r
             }
         }
 
-        console.log(updateData); // Log the data being sent to MongoDB for updating
+        
 
         // Update the user in the database
         const updatedUser = await User.findByIdAndUpdate(req.user.userId, updateData, {

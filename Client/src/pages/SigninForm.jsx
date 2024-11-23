@@ -71,7 +71,7 @@ export const Signin = () => {
                             onClick={async () => {
                                 setLoading(true);
                                 if (!email || !password) {
-                                    console.log("All fields are required.");
+                                    
                                     setError("All fields required")
                                     setLoading(false);
                                     return;
@@ -86,16 +86,16 @@ export const Signin = () => {
                                     if (response.status === 200) {
                                         navigate("/food-listings");
                                     } else {
-                                        console.log("Login failed: ", response.data.message);
+                                        
                                         setError(response.data.message || "Login Failed")
                                     }
                                 } catch (err) {
                                     if (err.response) {
-                                        console.log("Error Logging in: ", err.response.data.message);
+                                        
                                         setError(err.response.data.message || "Something Went Wrong")
                                     }
                                     else {
-                                        console.log("Error logging in: ", err.message);
+                                        
                                         setError("Something went wrong, try again!");
                                     }
                                 } finally {

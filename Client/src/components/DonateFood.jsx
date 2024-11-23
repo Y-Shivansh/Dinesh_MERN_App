@@ -1,7 +1,6 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
+import { useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";  // Import react-toastify styles
+import axios from "axios";
 
 export const DonateFood = ({ setIsModalOpen }) => {
     const [formData, setFormData] = useState({
@@ -13,18 +12,21 @@ export const DonateFood = ({ setIsModalOpen }) => {
         locationAddress: "",
         longitude: "",
         latitude: "",
+        email: "",
         photo: null,
-        // postedBy: "", // Assuming this will be the current user
     });
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
+
         setFormData((prevData) => ({
             ...prevData,
-            [name]: value,
+            [name]: value, // Always store the date as YYYY-MM-DD
         }));
-        
     };
+
+
+
 
     const handleFileChange = (e) => {
         setFormData((prevData) => ({
@@ -32,19 +34,17 @@ export const DonateFood = ({ setIsModalOpen }) => {
             photo: e.target.files[0],
         }));
     };
-    
+
     const handleSubmit = async (e) => {
         e.preventDefault();
-    
+
         const form = new FormData();
-        
         for (const key in formData) {
-            // console.log(formData[key]);
             if (key !== "photo") {
                 form.append(key, formData[key]);
-            } 
+            }
         }
-        
+
         if (isNaN(formData.longitude) || isNaN(formData.latitude)) {
             toast.error("Please enter valid longitude and latitude.");
             return;
@@ -52,13 +52,30 @@ export const DonateFood = ({ setIsModalOpen }) => {
         if (formData.photo) {
             form.append("photo", formData.photo);
         }
-        
+
         try {
-            console.log(form);
-            
-            const response = await axios.post("http://localhost:3000/api/listings/Create-FoodListings", form, { withCredentials: true });
-            toast.success(response.data.message); // Success toast
-            // Reset form data and close modal
+            const response = await axios.post(
+                "http://localhost:3000/api/listings/Create-FoodListings",
+                form,
+                { withCredentials: true }
+            );
+
+            toast.success(response.data.message);
+
+            const emailPayload = {
+                email: formData.email,
+                title: formData.title,
+                quantity: formData.quantity,
+                category: formData.category,
+                locationAddress: formData.locationAddress,
+            };
+
+            await axios.post("http://localhost:3000/api/listings/send-donation-email", emailPayload, {
+                withCredentials: true,
+            });
+
+            toast.success("Donation email sent successfully!");
+
             setFormData({
                 title: "",
                 description: "",
@@ -68,46 +85,54 @@ export const DonateFood = ({ setIsModalOpen }) => {
                 locationAddress: "",
                 longitude: "",
                 latitude: "",
+                email: "",
                 photo: null,
             });
             setIsModalOpen(false); // Close modal after submission
             location.reload()
         } catch (error) {
             console.error(error);
-            toast.error("Something went wrong. Please try again."); // Error toast
+            toast.error("Something went wrong. Please try again.");
         }
     };
-    
-
-    const handleOutsideClick = (e) => {
-        if (e.target.classList.contains("modal-overlay")) {
-            setIsModalOpen(false); // Close modal if clicked outside the form
-        }
-    };
-
-    useEffect(() => {
-        document.addEventListener("mousedown", handleOutsideClick);
-        return () => {
-            document.removeEventListener("mousedown", handleOutsideClick);
-        };
-    }, []);
 
     return (
-        <div className="modal-overlay fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50" onClick={handleOutsideClick}>
+        <div
+            className="modal-overlay fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50"
+            onClick={(e) => {
+                if (e.target.classList.contains("modal-overlay")) {
+                    setIsModalOpen(false);
+                }
+            }}
+        >
             <div className="bg-gray-100 p-6 rounded-lg w-full max-w-3xl relative overflow-auto max-h-screen">
-                {/* Close button */}
                 <button
                     className="absolute top-4 right-4 text-xl text-black"
-                    onClick={() => setIsModalOpen(false)} // Close the modal
+                    onClick={() => setIsModalOpen(false)}
                 >
                     &times;
                 </button>
                 <h2 className="text-xl font-semibold mb-4 text-red-950">Donate Food</h2>
                 <form onSubmit={handleSubmit} className="space-y-4">
-                    {/* Form fields */}
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div className="mb-4">
-                            <label htmlFor="title" className="block text-sm font-medium text-headingCol">Title</label>
+                            <label htmlFor="email" className="block text-sm font-medium text-headingCol">
+                                Email
+                            </label>
+                            <input
+                                type="email"
+                                id="email"
+                                name="email"
+                                value={formData.email}
+                                onChange={handleInputChange}
+                                className="mt-1 px-3 py-2 border border-gray-300 rounded-md w-full bg-transparent focus:outline-none text-black"
+                                required
+                            />
+                        </div>
+                        <div className="mb-4">
+                            <label htmlFor="title" className="block text-sm font-medium text-headingCol">
+                                Title
+                            </label>
                             <input
                                 type="text"
                                 id="title"
@@ -118,9 +143,23 @@ export const DonateFood = ({ setIsModalOpen }) => {
                                 required
                             />
                         </div>
-
                         <div className="mb-4">
-                            <label htmlFor="category" className="block text-sm font-medium text-headingCol">Category</label>
+                            <label htmlFor="description" className="block text-sm font-medium text-headingCol">
+                                Description
+                            </label>
+                            <textarea
+                                id="description"
+                                name="description"
+                                value={formData.description}
+                                onChange={handleInputChange}
+                                className="mt-1 px-3 py-2 border border-gray-300 rounded-md w-full bg-transparent focus:outline-none text-black"
+                                required
+                            ></textarea>
+                        </div>
+                        <div className="mb-4">
+                            <label htmlFor="category" className="block text-sm font-medium text-headingCol">
+                                Category
+                            </label>
                             <input
                                 type="text"
                                 id="category"
@@ -131,23 +170,10 @@ export const DonateFood = ({ setIsModalOpen }) => {
                                 required
                             />
                         </div>
-                    </div>
-
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div className="mb-4">
-                            <label htmlFor="description" className="block text-sm font-medium text-headingCol">Description</label>
-                            <textarea
-                                id="description"
-                                name="description"
-                                value={formData.description}
-                                onChange={handleInputChange}
-                                className="mt-1 px-3 py-2 border border-gray-300 rounded-md w-full bg-transparent focus:outline-none text-black"
-                                required
-                            />
-                        </div>
-
-                        <div className="mb-4">
-                            <label htmlFor="quantity" className="block text-sm font-medium text-headingCol">Quantity</label>
+                            <label htmlFor="quantity" className="block text-sm font-medium text-headingCol">
+                                Quantity
+                            </label>
                             <input
                                 type="number"
                                 id="quantity"
@@ -158,24 +184,21 @@ export const DonateFood = ({ setIsModalOpen }) => {
                                 required
                             />
                         </div>
-                    </div>
+                        <input
+                            type="date"
+                            id="expirationDate"
+                            name="expirationDate"
+                            value={formData.expirationDate || ""}
+                            onChange={handleInputChange}
+                            className="mt-1 px-3 py-2 border border-gray-300 rounded-md w-full bg-transparent focus:outline-none text-black"
+                            required
+                        />
 
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <div className="mb-4">
-                            <label htmlFor="expirationDate" className="block text-sm font-medium text-headingCol">Expiration Date</label>
-                            <input
-                                type="date"
-                                id="expirationDate"
-                                name="expirationDate"
-                                value={formData.expirationDate}
-                                onChange={handleInputChange}
-                                className="mt-1 px-3 py-2 border border-gray-300 rounded-md w-full bg-transparent focus:outline-none text-black"
-                                required
-                            />
-                        </div>
 
                         <div className="mb-4">
-                            <label htmlFor="locationAddress" className="block text-sm font-medium text-headingCol">Location Address</label>
+                            <label htmlFor="locationAddress" className="block text-sm font-medium text-headingCol">
+                                Location Address
+                            </label>
                             <input
                                 type="text"
                                 id="locationAddress"
@@ -186,11 +209,10 @@ export const DonateFood = ({ setIsModalOpen }) => {
                                 required
                             />
                         </div>
-                    </div>
-
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div className="mb-4">
-                            <label htmlFor="longitude" className="block text-sm font-medium text-headingCol">Longitude</label>
+                            <label htmlFor="longitude" className="block text-sm font-medium text-headingCol">
+                                Longitude
+                            </label>
                             <input
                                 type="text"
                                 id="longitude"
@@ -202,7 +224,9 @@ export const DonateFood = ({ setIsModalOpen }) => {
                             />
                         </div>
                         <div className="mb-4">
-                            <label htmlFor="latitude" className="block text-sm font-medium text-headingCol">Latitude</label>
+                            <label htmlFor="latitude" className="block text-sm font-medium text-headingCol">
+                                Latitude
+                            </label>
                             <input
                                 type="text"
                                 id="latitude"
@@ -213,21 +237,19 @@ export const DonateFood = ({ setIsModalOpen }) => {
                                 required
                             />
                         </div>
+                        <div className="mb-4">
+                            <label htmlFor="photo" className="block text-sm font-medium text-headingCol">
+                                Photo
+                            </label>
+                            <input
+                                type="file"
+                                id="photo"
+                                name="photo"
+                                onChange={handleFileChange}
+                                className="mt-1 px-3 py-2 border border-gray-300 rounded-md w-full bg-transparent focus:outline-none text-black"
+                            />
+                        </div>
                     </div>
-
-                    <div className="mb-4">
-                        <label htmlFor="photo" className="block text-sm font-medium text-headingCol">Photo</label>
-                        <input
-                            type="file"
-                            id="photo"
-                            name="photo"
-                            accept="image/*"
-                            onChange={handleFileChange}
-                            className="mt-1 w-full bg-transparent"
-                            multiple
-                        />
-                    </div>
-
                     <button
                         type="submit"
                         className="w-full bg-headingCol text-white py-2 rounded-md"
@@ -236,8 +258,7 @@ export const DonateFood = ({ setIsModalOpen }) => {
                     </button>
                 </form>
             </div>
-
-            <ToastContainer /> {/* Toast notifications */}
+            <ToastContainer />
         </div>
     );
 };

@@ -6,7 +6,7 @@ import seedAdmin from './seedAdmin.js';
 dotenv.config({path:'./dotenv.env'});
 
 mongoose.connect(process.env.MONGODB_URI)
-  .then(async () => {console.log("Connected to MongoDB")
+  .then(async () => {
     
     // Calling the seed function after connecting to the database
     await seedAdmin();
@@ -19,5 +19,5 @@ mongoose.connect(process.env.MONGODB_URI)
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT,()=>{
-    console.log(`App is listening on ${PORT}`);
+    
 });

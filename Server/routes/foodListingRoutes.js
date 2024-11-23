@@ -2,6 +2,7 @@ import express from "express";
 import { getAllFoodListings,getFilteredFoodListings, getUserFoodListing , getSearchedFoodListings,getFoodListingById, createFoodListing, updateFoodListing, deleteFoodListing } from "../controllers/foodListingController.js";
 import { authMiddleware } from "../middlewares/authenticate.js";
 import { upload } from "../middlewares/multer.js"; 
+import { sendDonationSuccessEmail } from "../utils/SendDonationSuccessEmail.js";
 import {body} from 'express-validator'
 
 const router = express.Router();
@@ -13,6 +14,43 @@ router.put("/FoodListings/:id",upload.single("photo"),authMiddleware,updateFoodL
 router.get("/FoodListings/Filtered", authMiddleware,getFilteredFoodListings);
 router.get("/user-FoodListings", authMiddleware,getUserFoodListing);
 router.delete("/FoodListings/:id",authMiddleware, deleteFoodListing);
+
+
+
+
+
+
+// Route to send donation success email
+router.post('/send-donation-email', authMiddleware, async (req, res) => {
+  try {
+      const { email } = req.body; // Extract email from the body
+      const { title, quantity, category, locationAddress } = req.body;
+
+      // Validate required fields
+      if (!email || !title || !quantity || !category || !locationAddress) {
+          return res.status(400).json({ message: 'All fields are required to send the email.' });
+      }
+
+      // Call the function to send the email
+      await sendDonationSuccessEmail(email, {
+          title,
+          quantity,
+          category,
+          locationAddress,
+      });
+
+      res.status(200).json({
+          message: 'Donation success email sent successfully!',
+      });
+  } catch (error) {
+      console.error('Error sending donation success email:', error);
+      res.status(500).json({ message: 'Server error while sending email.' });
+  }
+});
+
+
+
+
 
 router.post(
     "/Create-FoodListings",

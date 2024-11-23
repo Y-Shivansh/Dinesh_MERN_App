@@ -158,7 +158,7 @@ export default function ProfilePage() {
                       key={donation._id}
                       style={{ textDecoration: 'none' }}
                     >
-                      {/* {console.log(donation)} */}
+                      {/* {
                       <MDBCard key={donation._id} className="mb-3">
                         <MDBCardBody>
                           {/* Status Display */}

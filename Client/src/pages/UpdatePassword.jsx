@@ -37,7 +37,7 @@ const UpdatePassword = () => {
       navigate("/")
         // Assuming the success message comes in response data
     } catch (err) {
-      console.log(err);
+      
       
       setError(err.response?.data?.message || 'An error occurred');
     }
