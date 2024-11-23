@@ -39,7 +39,7 @@ export const changeStatusAccepted = async (req, res) => {
     }
 };
 
-export const requestDonation=async(req,res)=>{
+export const requestDonation = async(req,res)=>{
     try{
         const {foodListing}= req.body;
         const requestedBy = req.user.userId;
@@ -94,8 +94,10 @@ export const getDonationDetails = async (req, res) => {
     try {
         
         const id = req.user.userId;
-
-        const donation = await Donate.find({ acceptedBy: id })
+        // console.log(id);
+        
+        const foodId = req.params.id;
+        const donation = await Donate.find({ foodListing:foodId,requestedBy:id})
             .populate("foodListing")
             .populate("requestedBy") 
             .populate("acceptedBy"); 
@@ -149,5 +151,34 @@ export const changeStatusScheduled = async(req,res)=>{
             msg: "Internal Server Error",
             error: err.message,
         });
+    }
+};
+
+export const getAllDetails = async (req, res) => {
+    try {
+        
+        const id = req.user.userId;
+        // Find donations where the user is either the requester, the accepter, or the creator
+        const donation = await Donate.find({
+            $or: [
+                { user: id },
+                { requestedBy: id },
+                { acceptedBy: id }
+            ]
+        })
+            .populate("foodListing")
+            .populate("requestedBy")
+            .populate("acceptedBy");
+        
+        // console.log(donation);
+        
+        if (!donation || donation.length === 0) {
+            return res.status(201).json({ error: "No donations found for this user." });
+        }
+
+        res.status(200).json({ donation });
+    } catch (error) {
+        console.error("Error in getDonationDetails:", error);
+        res.status(500).json({ error: "Internal Server Error" });
     }
 };

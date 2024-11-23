@@ -12,7 +12,9 @@ const FoodDetail = () => {
   const [error, setError] = useState(null);
   const [showProfileOverlay, setShowProfileOverlay] = useState(false); // State for profile overlay
   const [showRequestOverlay, setShowRequestOverlay] = useState(false); // State for request overlay
-
+  const [donate,setDonate]=useState();
+  const [scheduledPickup,setScheduledPickup]=useState(null);
+  const [completionDate,setCompletionDate]=useState(null);
   useEffect(() => {
     const fetchFoodItem = async () => {
       try {
@@ -34,6 +36,33 @@ const FoodDetail = () => {
     };
 
     fetchFoodItem();
+  }, [id]);
+
+  useEffect(() => {
+    const getDonate = async () => {
+      try {
+        const res = await axios.get(`http://localhost:3000/api/user/donate/donations/${id}`, { withCredentials: true });
+        const data = res.data;
+        if (res.status === 200) {
+          console.log(data.donation[0].completionDate);
+          
+          setDonate(data.donation[0].status);
+          setScheduledPickup(data.donation[0].scheduledPickup);
+          setCompletionDate(data.donation[0].completionDate)
+          // toast.success('Food item loaded successfully!');
+        } else {
+          setDonate(null);
+        }
+      } catch (error) {
+        console.error('Error fetching food item:', error);
+        setDonate(null);
+        // toast.error('Food item not found!');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    getDonate();
   }, [id]);
 
   // Request to donation Route
@@ -108,11 +137,25 @@ const FoodDetail = () => {
               </div>
             </div>
             <div className="flex space-x-2 w-full">
-              <div
+            <div
                 onClick={() => setShowRequestOverlay(true)}
-                className="bg-gray-500 hover:bg-gray-600 text-white rounded-md py-2 px-6 w-full md:w-auto cursor-pointer transition-all duration-200 transform text-center"
+                className={`${
+                  donate === 'requested' 
+                    ? 'bg-brown-500 hover:bg-brown-600' 
+                    : donate === 'accepted' 
+                    ? 'bg-blue-500 hover:bg-blue-600'
+                    : donate === 'scheduled' 
+                    ? 'bg-yellow-500 hover:bg-yellow-600'
+                    : donate === 'completed' 
+                    ? 'bg-green-500 hover:bg-green-600' 
+                    : 'bg-gray-500 hover:bg-gray-600'
+                } text-green rounded-md py-2 px-6 w-full md:w-auto cursor-pointer transition-all duration-200 transform text-center`}
               >
-                Request
+                 {donate === 'requested' ? 'Requested' : 
+                  donate === 'accepted' ? 'Accepted' :
+                  donate === 'scheduled' ? `Scheduled: ${new Date(scheduledPickup).toLocaleDateString()}` :
+                  donate === 'completed' ? `Completed: ${new Date(completionDate).toLocaleDateString()}` : 'Request'}
+
               </div>
               <div
                 onClick={() => setShowProfileOverlay(true)}
@@ -125,7 +168,7 @@ const FoodDetail = () => {
         </div>
 
         {/* Request Overlay */}
-        {showRequestOverlay && (
+        {showRequestOverlay &&  donate !== 'requested'&&  donate !== 'accepted' && donate !== 'scheduled'&& donate !== 'completed' && (
           <div className="absolute inset-0 flex justify-center items-center bg-black bg-opacity-50">
             <div className="bg-white p-8 rounded-2xl shadow-lg w-full max-w-4xl text-center">
               <h2 className="text-2xl font-semibold mb-4 text-green-600">Request Confirmation</h2>

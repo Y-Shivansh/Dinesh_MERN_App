@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { MDBCol, MDBContainer, MDBRow, MDBCard, MDBCardText, MDBCardBody, MDBCardImage, MDBBreadcrumb, MDBBreadcrumbItem } from 'mdb-react-ui-kit';
 import axios from 'axios';
 import Ratings from "react-ratings-declarative";
+import { Link } from "react-router-dom";
 
 const Loader = () => <div className="text-center mt-6">Loading...</div>;
 
@@ -29,6 +30,7 @@ export default function ProfilePage() {
 
         if (userResponse.status === 200) setUser(userResponse.data);
         if (donationResponse.status === 200) setDonations(donationResponse.data.donation);
+        if(donationResponse.status === 201) setDonations(null);
       } catch (err) {
         setError(err.message || "Failed to fetch data.");
       } finally {
@@ -148,28 +150,53 @@ export default function ProfilePage() {
             <MDBRow>
               <MDBCol>
                 <h4 className="mt-4 text-headingCol fw-bold">Donation History</h4>
-                {donations.length > 0 ? (
+                {donations ? (
                   donations.map((donation) => (
-                    <MDBCard key={donation._id} className="mb-3">
-                      <MDBCardBody>
-                      <MDBCardText>
-                              <span className="fw-bold">Status:</span>{" "}
-                              <span
-                                className={`fw-bold ${
-                                  donation.status === "completed" ? "text-success" : "text-primary"
-                                }`}>
-                                {donation.status === "completed" ? "Completed" : "Requested"}
-                              </span>
-                            </MDBCardText>
+                    
+                    <Link 
+                      to={`/food-detail/${donation.foodListing._id}`} 
+                      key={donation._id}
+                      style={{ textDecoration: 'none' }}
+                    >
+                      {/* {console.log(donation)} */}
+                      <MDBCard key={donation._id} className="mb-3">
+                        <MDBCardBody>
+                          {/* Status Display */}
+                                <MDBCardText>
+                                  <span className="fw-bold">Title : </span>{" "}<span>{donation.foodListing.title}</span>
+                                </MDBCardText>
+                          <MDBCardText>
+                            {
+                            }
+                            <span className="fw-bold">Status:</span>{" "}
+                            <span
+                              className={`fw-bold ${
+                                donation.status === "completed"
+                                  ? "text-success"
+                                  : donation.status === "scheduled"
+                                  ? "text-warning"
+                                  : donation.status === "accepted"
+                                  ? "text-info"
+                                  : "text-primary"
+                              }`}
+                            >
+                              {donation.status === "completed" && donation.completionDate
+                                ? `Completed on ${new Date(donation.completionDate).toLocaleDateString()}`
+                                : donation.status === "scheduled" && donation.scheduleDate
+                                ? `Scheduled for ${new Date(donation.scheduleDate).toLocaleDateString()}`
+                                : donation.status === "accepted"
+                                ? "Accepted"
+                                : "Requested"}
+                            </span>
+                          </MDBCardText>
 
-                        <MDBCardText>
-                          <span className="fw-bold">Scheduled Pickup:</span> {new Date(donation.scheduledPickup).toLocaleString()}
-                        </MDBCardText>
-                        <MDBCardText>
-                          <span className="fw-bold">Completion Date:</span> {new Date(donation.completionDate).toLocaleString()}
-                        </MDBCardText>
-                      </MDBCardBody>
-                    </MDBCard>
+                          {/* Conditional Rendering for Scheduled Pickup */}
+
+                          
+                        </MDBCardBody>
+                      </MDBCard>
+                    </Link>
+
                   ))
                 ) : (
                   <MDBCardText className="text-muted">No donations found.</MDBCardText>
