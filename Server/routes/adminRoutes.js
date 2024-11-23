@@ -154,6 +154,8 @@ router.patch('/handle-reports/:id', verifyAdmin, async (req, res) => {
         }
         res.status(200).json({ message: 'Report handled successfully' });
     } catch (error) {
+        console.log(error);
+        
         res.status(500).json({ message: 'Error handling report', error });
     }
 });
