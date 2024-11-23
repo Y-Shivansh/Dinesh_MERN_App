@@ -47,10 +47,10 @@ const ProfileUpdate = () => {
       if (values.profilePicture) {
         formData.append('profilePicture', values.profilePicture);
       }
-      
+      console.log(formData);
       
       try {
-        // 
+        // console.log(formData);
         
         const response = await axios.put('http://localhost:3000/api/user/profile', formData, {
           withCredentials: true,
@@ -58,10 +58,10 @@ const ProfileUpdate = () => {
             'Content-Type': 'multipart/form-data',
           },
         });
-        // 
+        // console.log(response);
         
         alert('Profile updated successfully');
-        
+        console.log(response.data);
         location.reload('/');
       } catch (err) {
         setError(err.message || "Failed to update profile.");

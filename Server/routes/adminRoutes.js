@@ -85,7 +85,7 @@ router.delete('/moderate-listings/:id', verifyAdmin, async (req, res) => {
         res.status(200).json({ message: 'Listing deleted successfully' });
     } 
     catch (error) {
-        
+        console.log(error);
         
         res.status(500).json({ message: 'Error deleting listing', error });
     }
@@ -120,7 +120,7 @@ router.get('/handle-reports', verifyAdmin, async (req, res) => {
             .populate('reportedContent');  // listing that was reported
         res.status(200).json(reports);
     } catch (error) {
-        
+        console.log(error);
         
         res.status(500).json({ message: 'Error fetching reports', error });
     }
@@ -154,7 +154,7 @@ router.patch('/handle-reports/:id', verifyAdmin, async (req, res) => {
         }
         res.status(200).json({ message: 'Report handled successfully' });
     } catch (error) {
-        
+        console.log(error);
         
         res.status(500).json({ message: 'Error handling report', error });
     }

@@ -44,7 +44,7 @@ export const sendOtp = async (email, additionalData = {}) => {
         };
 
         await transporter.sendMail(mailOptions);
-        
+        console.log('OTP sent to email:', email);
 
         return otp;
     } catch (err) {

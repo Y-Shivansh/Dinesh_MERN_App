@@ -34,16 +34,16 @@ export const VerificationForm = () => {
             if (response.status === 201) {
                 navigate("/food-listings");
             } else {
-                
+                console.log(response.data.message);
                 setError(response.data.message);
             }
         } catch (err) {
             if (err.response) {
-                
+                console.log("Error Occurred", err.response.data.message);
                 setError(err.response.data.message || "Error Occurred");
             }
             else {
-                
+                console.log("Error Verifying: ", err.message);
                 setError("Error verifying OTP");
             }
         }

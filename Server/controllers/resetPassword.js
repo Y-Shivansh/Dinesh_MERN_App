@@ -33,7 +33,7 @@ export const resetPassword = async (req, res) => {
         await Otp.deleteOne({ email });
         res.status(408).json({message: "Requested Timeout"})
     } catch (error) {
-        
+        console.log(error);
         res.status(500).json({ message: "Server Error" })
     }
 }

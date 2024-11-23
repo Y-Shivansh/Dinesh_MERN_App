@@ -23,7 +23,7 @@ const Login = () => {
 
       if (response.status === 200) {
         setSuccessMessage("Login successful!");
-        
+        console.log("Response Data:", response.data);
 
         // Navigate to dashboard after 1 second
         setTimeout(() => navigate("/dashboard"), 1000);
@@ -32,7 +32,7 @@ const Login = () => {
       if (error.response) {
         // Server responded with a status other than 2xx
         setErrorMessage(error.response.data.message || "Invalid credentials");
-        
+        console.log("Error Response:", error.response);
       } else if (error.request) {
         // Request was made but no response received
         setErrorMessage("No response from the server");
