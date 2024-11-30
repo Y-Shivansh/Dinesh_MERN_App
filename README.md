@@ -82,7 +82,7 @@ Copyright © 2024 by Team SARD:
 - Aryan Singh
 - Dhruv Baliyan
 
-For more details, see the [LICENSE](LICENSE) file.
+For more details, see the [LICENSE](License) file.
 
 
 ## Acknowledgments:
